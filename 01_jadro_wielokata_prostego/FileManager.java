@@ -22,7 +22,9 @@ public class FileManager {
               polygon.add(stringToPoint(line));
           }
       } catch (Exception e) {
-          e.printStackTrace();
+          // e.printStackTrace();
+          System.out.println("File \"" + fileName + "\" Not Found.");
+          System.exit(0);
       }
       return polygon;
   }

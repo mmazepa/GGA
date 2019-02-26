@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class App {
     public static ArrayList<Point> polygon = new ArrayList<Point>();
-    public static String inputFileName = "input2.txt";
+    public static String inputFileName = new String();
 
     public static double min = 0;
     public static double max = 0;
@@ -75,11 +75,21 @@ public class App {
     }
 
     public static void main(String args[]) {
+      if (args.length > 0) {
+        inputFileName = args[0];
+      } else {
+        System.out.println("No File Selected.");
+        System.exit(0);
+      }
+
       FileManager fm = new FileManager();
       polygon = fm.preparePolygon(inputFileName);
 
-      if (polygon.size() < 4) {
+      if (polygon.size() < 4 && polygon.size() > 0) {
         System.out.println("CORE: YES!");
+        System.exit(0);
+      } else if (polygon.size() == 0) {
+        System.out.println("No points provided.");
         System.exit(0);
       } else {
         System.out.println("CORE: DON'T KNOW YET...");
