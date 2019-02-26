@@ -4,8 +4,7 @@ import java.io.BufferedReader;
 import java.util.ArrayList;
 
 public class FileManager {
-
-  public static Point fillTheList(String stringToSplit) {
+  public static Point stringToPoint(String stringToSplit) {
       String[] splitted = stringToSplit.split(",");
       Point p = new Point(Double.parseDouble(splitted[0]), Double.parseDouble(splitted[1]));
       return p;
@@ -20,15 +19,11 @@ public class FileManager {
 
           String line;
           while ((line = bufferedReader.readLine()) != null) {
-              polygon.add(fillTheList(line));
+              polygon.add(stringToPoint(line));
           }
       } catch (Exception e) {
           e.printStackTrace();
       }
       return polygon;
-  }
-
-  public static ArrayList<Point> getData(String fileName) {
-    return preparePolygon(fileName);
   }
 }
