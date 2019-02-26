@@ -6,28 +6,33 @@ import java.util.ArrayList;
 public class App {
 
     public static ArrayList<Point> polygon = new ArrayList<Point>();
+    public static String inputFileName = "input.txt";
 
-    public static void main(String args[]) {
-        FileInputStream fileInputStream = null;
-        InputStreamReader inputStreamReader = null;
-        BufferedReader bufferedReader = null;
-        
+    public static void stringToPoint(String stringToSplit) {
+        String[] splitted = stringToSplit.split(",");
+        Point p = new Point(Double.parseDouble(splitted[0]), Double.parseDouble(splitted[1]));
+        polygon.add(p);
+    }
+
+    public static void preparePolygon() {
         try {
-            fileInputStream = new FileInputStream("input.txt");
-            inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
-            bufferedReader = new BufferedReader(inputStreamReader);
-            String s;
+            FileInputStream fileInputStream = new FileInputStream(inputFileName);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-            while ((s = bufferedReader.readLine()) != null) {
-                String[] var = s.split(",");
-                Point p = new Point(Double.parseDouble(var[0]), Double.parseDouble(var[1]));
-                polygon.add(p);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringToPoint(line);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-        for (int i = 0; i < 3; i++)
+    public static void main(String args[]) {    
+        preparePolygon();
+
+        for (int i = 0; i < polygon.size(); i++)
             System.out.println("P(" + polygon.get(i).getX() + ", " + polygon.get(i).getY() + ")");
     }
 }
