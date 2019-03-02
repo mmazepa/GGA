@@ -1,5 +1,5 @@
-## Geometria, Grafy, Algorytmy
+## Grafy - Geometria - Algorytmy
 
 Niniejsze repozytorium przeznaczone jest do przechowywania zadań
-realizowanych w ramach przedmiotu Geometria, Grafy, Algorytmy
+realizowanych w ramach przedmiotu Grafy - Geometria - Algorytmy
 w roku akademickim 2018/2019.

@@ -4,8 +4,12 @@ public class App {
     public static ArrayList<Point> polygon = new ArrayList<Point>();
     public static String inputFileName = new String();
 
-    public static double min = 0;
-    public static double max = 0;
+    public static Point min = new Point(0, 0);
+    public static Point max = new Point(0, 0);
+
+    public ArrayList<Point> getPoints() {
+      return polygon;
+    }
 
     public static ArrayList<Point> edgesBetween(Point p1, Point p2, Point p3) {
       ArrayList<Point> edges = new ArrayList<Point>();
@@ -56,11 +60,11 @@ public class App {
     }
 
     public static void setMinMax() {
-      min = polygon.get(0).getY();
-      max = polygon.get(0).getY();
+      min = polygon.get(0);
+      max = polygon.get(0);
       for (int i = 0; i < polygon.size(); i++) {
-        if (polygon.get(i).getY() > min) min = polygon.get(i).getY();
-        if (polygon.get(i).getY() < max) max = polygon.get(i).getY();
+        if (polygon.get(i).getY() > min.getY()) min = polygon.get(i);
+        if (polygon.get(i).getY() < max.getY()) max = polygon.get(i);
       }
     }
 
@@ -78,7 +82,7 @@ public class App {
       if (args.length > 0) {
         inputFileName = args[0];
       } else {
-        System.out.println("No File Selected.");
+        System.out.println("Nie wybrano pliku.");
         System.exit(0);
       }
 
@@ -86,17 +90,17 @@ public class App {
       polygon = fm.preparePolygon(inputFileName);
 
       if (polygon.size() < 4 && polygon.size() > 0) {
-        System.out.println("CORE: YES!");
+        System.out.println("JĄDRO: TAK!");
         System.exit(0);
       } else if (polygon.size() == 0) {
-        System.out.println("No points provided.");
+        System.out.println("Nie podano punktów.");
         System.exit(0);
       } else {
-        System.out.println("CORE: DON'T KNOW YET...");
+        // System.out.println("JĄDRO: Jeszcze nie wiadomo...");
       }
 
       setMinMax();
-      System.out.println("min: " + min + ", max: " + max);
+      System.out.println("min: " + min.getY() + ", max: " + max.getY());
 
       for (int i = 0; i < polygon.size(); i++) {
         ArrayList<Point> edges = new ArrayList<Point>();
@@ -105,17 +109,19 @@ public class App {
 
         int o = checkOrientation(edges);
         if (o == 0) {
-          System.out.print(" -> COLLINEAR\n");
+          System.out.print(" -> WSPÓŁLINIOWE\n");
         } else if (o == 1) {
-          System.out.print(" -> RIGHT\n");
-          if (edges.get(1).getY() > max && isMinMax(edges).equals("max")) max = edges.get(1).getY();
-          if (edges.get(1).getY() < min && isMinMax(edges).equals("min")) min = edges.get(1).getY();
+          System.out.print(" -> W PRAWO\n");
+          if (edges.get(1).getY() > max.getY() && isMinMax(edges).equals("max")) max = edges.get(1);
+          if (edges.get(1).getY() < min.getY() && isMinMax(edges).equals("min")) min = edges.get(1);
         } else if (o == 2) {
-          System.out.print(" -> LEFT\n");
+          System.out.print(" -> W LEWO\n");
         }
       }
-      System.out.println("min: " + min + ", max: " + max);
-      if (max <= min) System.out.println("CORE: YES!");
-      else System.out.println("CORE: NO!");
+      System.out.println("min: " + min.getY() + ", max: " + max.getY());
+      if (max.getY() <= min.getY()) System.out.println("JĄDRO: TAK!");
+      else System.out.println("JĄDRO: NIE!");
+
+      Window.display();
     }
 }

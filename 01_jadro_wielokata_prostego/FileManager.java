@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class FileManager {
   public static Point stringToPoint(String stringToSplit) {
       String[] splitted = stringToSplit.split(",");
-      Point p = new Point(Double.parseDouble(splitted[0]), Double.parseDouble(splitted[1]));
+      Point p = new Point(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
       return p;
   }
 
@@ -23,7 +23,7 @@ public class FileManager {
           }
       } catch (Exception e) {
           // e.printStackTrace();
-          System.out.println("File \"" + fileName + "\" Not Found.");
+          System.out.println("Plik \"" + fileName + "\" nie został znaleziony.");
           System.exit(0);
       }
       return polygon;
