@@ -9,33 +9,58 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Window extends JPanel {
+  public static int toInt(double num) {
+    int integer = (int) Math.round(num);
+    return integer;
+  }
+
+  public void drawMinMax(Graphics g, Color color, Point point) {
+    String minOrMax = new String();
+    if (color == Color.RED) { minOrMax = "min"; }
+    else if (color == Color.BLUE) { minOrMax = "max"; }
+    g.setColor(color);
+    g.drawString("o", toInt(50+(point.getX()*50)-3), toInt(450-(point.getY()*50)+5));
+    g.drawLine(0, toInt(450-(point.getY()*50)), 500, toInt(450-(point.getY()*50)));
+    g.drawString(minOrMax+"="+point.getY(), toInt(point.getY()+20), toInt(450-(point.getY()*50)));
+  }
+
   public void paintComponent(Graphics g) {
-    super.paintComponent(g);
     Polygon p = new Polygon();
+    Polygon cp = new Polygon();
+
+    for (int i = 0; i < App.corePolygon.size(); i++) {
+      double x = App.corePolygon.get(i).getX();
+      double y = App.corePolygon.get(i).getY();
+      cp.addPoint(toInt(50+(x*50)), toInt(450-(y*50)));
+    }
+    g.setColor(Color.LIGHT_GRAY);
+    g.drawPolygon(cp);
+    g.fillPolygon(cp);
+
     for (int i = 0; i < App.polygon.size(); i++) {
-      int x = App.polygon.get(i).getX();
-      int y = App.polygon.get(i).getY();
-      p.addPoint(50+(x*50), 450-(y*50));
+      double x = App.polygon.get(i).getX();
+      double y = App.polygon.get(i).getY();
+      p.addPoint(toInt(50+(x*50)), toInt(450-(y*50)));
       g.setColor(Color.BLACK);
-      g.drawString("o", 50+(x*50)-3, 450-(y*50)+5);
+      g.drawString("o", toInt(50+(x*50)-3), toInt(450-(y*50)+5));
       g.setColor(Color.DARK_GRAY);
-      g.drawString("(" + x + ", " + y + ")", 35+(x*50), 450-(y*50)-5);
+      g.drawString("(" + x + ", " + y + ")", toInt(25+(x*50)), toInt(450-(y*50)-5));
     }
     g.setColor(Color.BLACK);
     g.drawPolygon(p);
 
-    Point min = App.min;
-    Point max = App.max;
+    drawMinMax(g, Color.RED, App.min);
+    drawMinMax(g, Color.BLUE, App.max);
 
-    g.setColor(Color.RED);
-    g.drawString("o", 50+(min.getX()*50)-3, 450-(min.getY()*50)+5);
-    g.drawLine(0, 450-(min.getY()*50), 500, 450-(min.getY()*50));
-    g.drawString("min="+min.getY(), 20, 450-(min.getY()*50));
+    for (int i = 0; i < App.newPoints.size(); i++) {
+      drawNewPoint(g, App.newPoints.get(i));
+    }
+  }
 
-    g.setColor(Color.BLUE);
-    g.drawString("o", 50+(max.getX()*50)-3, 450-(max.getY()*50)+5);
-    g.drawLine(0, 450-(max.getY()*50), 500, 450-(max.getY()*50));
-    g.drawString("max="+max.getY(), 20, 450-(max.getY()*50));
+  public static void drawNewPoint(Graphics g, Point p) {
+    g.setColor(Color.MAGENTA);
+    g.drawString("o", toInt(50+(p.getX()*50)-3), toInt(450-(p.getY()*50)+5));
+    g.drawString("(" + p.getX() + ", " + p.getY() + ")", toInt(25+(p.getX()*50)), toInt(450-(p.getY()*50)-5));
   }
 
   public static void display() {

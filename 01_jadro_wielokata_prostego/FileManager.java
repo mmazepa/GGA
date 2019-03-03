@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class FileManager {
   public static Point stringToPoint(String stringToSplit) {
       String[] splitted = stringToSplit.split(",");
-      Point p = new Point(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
+      Point p = new Point(Double.parseDouble(splitted[0]), Double.parseDouble(splitted[1]));
       return p;
   }
 

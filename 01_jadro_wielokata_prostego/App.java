@@ -2,14 +2,12 @@ import java.util.ArrayList;
 
 public class App {
     public static ArrayList<Point> polygon = new ArrayList<Point>();
+    public static ArrayList<Point> corePolygon = new ArrayList<Point>();
+    public static ArrayList<Point> newPoints = new ArrayList<Point>();
     public static String inputFileName = new String();
 
     public static Point min = new Point(0, 0);
     public static Point max = new Point(0, 0);
-
-    public ArrayList<Point> getPoints() {
-      return polygon;
-    }
 
     public static ArrayList<Point> edgesBetween(Point p1, Point p2, Point p3) {
       ArrayList<Point> edges = new ArrayList<Point>();
@@ -78,6 +76,59 @@ public class App {
       return result;
     }
 
+    public static ArrayList<Point> calculateNewPoint(String minOrMax, Point p1, Point p2) {
+      Point newPoint1 = new Point(-1, -1);
+      Point newPoint2 = new Point(-1, -1);
+      ArrayList<Point> newPoints = new ArrayList<Point>();
+      double newX;
+      Point minMax = new Point();
+
+      if (minOrMax.equals("min")) minMax = min;
+      else if (minOrMax.equals("max")) minMax = max;
+
+      if ((p1.getY() < minMax.getY()) && (p2.getY() > minMax.getY())) {
+        newX = (((minMax.getY() - p1.getY()) * (p2.getX() - p1.getX())) / (p2.getY() - p1.getY())) + p1.getX();
+        newPoint1 = new Point(newX, minMax.getY());
+      }
+
+      if ((p1.getY() > minMax.getY()) && (p2.getY() < minMax.getY())) {
+        newX = (((minMax.getY() - p1.getY()) * (p2.getX() - p1.getX())) / (p2.getY() - p1.getY())) + p1.getX();
+        newPoint2 = new Point(newX, minMax.getY());
+      }
+
+      if (newPoint1.getX() != -1 && newPoint1.getY() != -1) newPoints.add(newPoint1);
+      if (newPoint2.getX() != -1 && newPoint2.getY() != -1) newPoints.add(newPoint2);
+
+      return newPoints;
+    }
+
+    public static void prepareCorePolygon() {
+      System.out.println(polygon.size());
+      System.out.println(newPoints.size());
+      System.out.println(corePolygon.size());
+
+      System.out.println("PRZED:");
+      for (int i = 0; i < corePolygon.size(); i++) {
+        if (i == 3 || i == 6 || i == 12 || i == 13) System.out.print("-> ");
+        else System.out.print("   ");
+        System.out.println((i+1) + ". (" + corePolygon.get(i).getX() + ", " + corePolygon.get(i).getY() + ")");
+      }
+
+      for (int i = corePolygon.size()-1; i >= 0; i--) {
+        Point tmpPoint = corePolygon.get(i);
+        if (tmpPoint.getY() > min.getY() || tmpPoint.getY() < max.getY()){
+          corePolygon.remove(i);
+        }
+      }
+
+      System.out.println("PO:");
+      for (int i = 0; i < corePolygon.size(); i++) {
+        if (i == 1 || i == 4 || i == 6 || i == 7) System.out.print("-> ");
+        else System.out.print("   ");
+        System.out.println((i+1) + ". (" + corePolygon.get(i).getX() + ", " + corePolygon.get(i).getY() + ")");
+      }
+    }
+
     public static void main(String args[]) {
       if (args.length > 0) {
         inputFileName = args[0];
@@ -122,6 +173,66 @@ public class App {
       if (max.getY() <= min.getY()) System.out.println("JĄDRO: TAK!");
       else System.out.println("JĄDRO: NIE!");
 
+      corePolygon.addAll(polygon);
+
+      for (int i = 0; i < polygon.size(); i++) {
+        ArrayList<Point> retrievedPoints = new ArrayList<Point>();
+        if (i < polygon.size()-1) {
+          retrievedPoints.addAll(calculateNewPoint("min", polygon.get(i), polygon.get(i+1)));
+          retrievedPoints.addAll(calculateNewPoint("max", polygon.get(i), polygon.get(i+1)));
+          // calculateNewPoint("min", polygon.get(i), polygon.get(i+1));
+          // calculateNewPoint("max", polygon.get(i), polygon.get(i+1));
+        } else {
+          retrievedPoints.addAll(calculateNewPoint("min", polygon.get(polygon.size()-1), polygon.get(0)));
+          retrievedPoints.addAll(calculateNewPoint("max", polygon.get(polygon.size()-1), polygon.get(0)));
+          // calculateNewPoint("min", polygon.get(polygon.size()-1), polygon.get(0));
+          // calculateNewPoint("max", polygon.get(polygon.size()-1), polygon.get(0));
+        }
+
+        if (retrievedPoints.size() > 0) {
+          newPoints.add(retrievedPoints.get(0));
+          if (retrievedPoints.size() == 2)
+            newPoints.add(retrievedPoints.get(1));
+
+          if (i < polygon.size()-1) {
+            if (polygon.get(i).getY() < polygon.get(i+1).getY()) {
+              if (polygon.get(i).getY() > polygon.get(i+1).getY())
+                corePolygon.add(i, retrievedPoints.get(0));
+              else
+                corePolygon.add(i+1, retrievedPoints.get(0));
+              System.out.println("(1)Inserting: " + retrievedPoints.size());
+            } else {
+              corePolygon.add(i+1, retrievedPoints.get(0));
+              System.out.println("(2)Inserting: " + retrievedPoints.size());
+            }
+          } else {
+            corePolygon.add(corePolygon.size(), retrievedPoints.get(0));
+            if (retrievedPoints.size() == 2)
+              corePolygon.add(corePolygon.size(), retrievedPoints.get(1));
+            System.out.println("(3)Inserting: " + retrievedPoints.size());
+          }
+
+          // if (retrievedPoints.get(0).getY() > polygon.get(i).getY())
+          //   corePolygon.add(i, retrievedPoints.get(0));
+          // else
+          //   corePolygon.add(i+1, retrievedPoints.get(0));
+          //
+          // if (retrievedPoints.size() == 2) {
+          //   newPoints.add(retrievedPoints.get(1));
+          //   // corePolygon.add(i+2, retrievedPoints.get(1));
+          //   if (retrievedPoints.get(1).getY() > polygon.get(i).getY())
+          //     corePolygon.add(i+1, retrievedPoints.get(1));
+          //   else
+          //     corePolygon.add(i+2, retrievedPoints.get(1));
+          // }
+        }
+      }
+
+      // for (int i = 0; i < newPoints.size(); i++) {
+      //   System.out.println("(" + newPoints.get(i).getX() + ", " + newPoints.get(i).getY() + ")");
+      // }
+
+      prepareCorePolygon();
       Window.display();
     }
 }
