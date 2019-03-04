@@ -57,6 +57,25 @@ public class App {
       return (val > 0)? 1: 2;
     }
 
+    public static void displayOrientation() {
+      for (int i = 0; i < polygon.size(); i++) {
+        ArrayList<Point> edges = new ArrayList<Point>();
+        edges = getEdges(i,  polygon);
+        System.out.print((i+1) + ". " + printThree(i, polygon.size(), edges));
+
+        int o = checkOrientation(edges);
+        if (o == 0) {
+          System.out.print(" -> WSPÓŁLINIOWE\n");
+        } else if (o == 1) {
+          System.out.print(" -> W PRAWO\n");
+          if (edges.get(1).getY() > max.getY() && isMinMax(edges).equals("max")) max = edges.get(1);
+          if (edges.get(1).getY() < min.getY() && isMinMax(edges).equals("min")) min = edges.get(1);
+        } else if (o == 2) {
+          System.out.print(" -> W LEWO\n");
+        }
+      }
+    }
+
     public static void setMinMax() {
       min = polygon.get(0);
       max = polygon.get(0);
@@ -76,6 +95,12 @@ public class App {
       return result;
     }
 
+    public static void displayMinMax() {
+      System.out.print("\n");
+      System.out.println("min: " + min.getY() + ", max: " + max.getY());
+      System.out.print("\n");
+    }
+
     public static ArrayList<Point> calculateNewPoint(int index, String minOrMax, Point p1, Point p2) {
       Point newPoint = new Point(-1, -1);
       ArrayList<Point> newPoints = new ArrayList<Point>();
@@ -93,24 +118,24 @@ public class App {
         newPoint = new Point(newX, minMax.getY());
       }
 
-      System.out.print("[" + minOrMax + "] " + p1.toString() + ", " + p2.toString());
+      // System.out.print("[" + minOrMax + "] " + p1.toString() + ", " + p2.toString());
       if (newPoint.getX() != -1 && newPoint.getY() != -1) {
-        System.out.print(" -----> [" + newPoint.toString() + "]");
+        // System.out.print(" -----> [" + newPoint.toString() + "]");
         newPoints.add(newPoint);
         corePolygon.add(index+1, newPoint);
       }
-      System.out.print("\n");
+      // System.out.print("\n");
 
       return newPoints;
     }
 
     public static void prepareCorePolygon() {
-      System.out.println(polygon.size() + " + " + newPoints.size() + " = " + corePolygon.size());
+      // System.out.println(polygon.size() + " + " + newPoints.size() + " = " + corePolygon.size());
 
-      System.out.println("PRZED:");
-      for (int i = 0; i < corePolygon.size(); i++) {
-        System.out.println("   " + (i+1) + ". " + corePolygon.get(i).toString());
-      }
+      // System.out.println("PRZED:");
+      // for (int i = 0; i < corePolygon.size(); i++) {
+      //   System.out.println("   " + (i+1) + ". " + corePolygon.get(i).toString());
+      // }
 
       for (int i = corePolygon.size()-1; i >= 0; i--) {
         Point tmpPoint = corePolygon.get(i);
@@ -119,10 +144,10 @@ public class App {
         }
       }
 
-      System.out.println("PO:");
-      for (int i = 0; i < corePolygon.size(); i++) {
-        System.out.println("   " + (i+1) + ". " + corePolygon.get(i).toString());
-      }
+      // System.out.println("PO:");
+      // for (int i = 0; i < corePolygon.size(); i++) {
+      //   System.out.println("   " + (i+1) + ". " + corePolygon.get(i).toString());
+      // }
     }
 
     public static double calculateLength(Point p1, Point p2) {
@@ -139,48 +164,20 @@ public class App {
           perimeter += calculateLength(points.get(i), points.get(i+1));
         }
       }
-      return perimeter;
+      return (double)Math.round(perimeter*1000)/1000;
     }
 
-    public static void main(String args[]) {
-      if (args.length > 0) {
-        inputFileName = args[0];
-      } else {
-        System.out.println("Nie wybrano pliku.");
-        System.exit(0);
-      }
-
-      FileManager fm = new FileManager();
-      polygon = fm.preparePolygon(inputFileName);
-
-      if (polygon.size() < 4 && polygon.size() > 0) {
-        System.out.println("JĄDRO: TAK!");
+    public static void checkPolygon() {
+      if (polygon.size() < 3 && polygon.size() > 0) {
+        System.out.println("JĄDRO: NIE!");
         System.exit(0);
       } else if (polygon.size() == 0) {
         System.out.println("Nie podano punktów.");
         System.exit(0);
       }
+    }
 
-      setMinMax();
-      System.out.println("min: " + min.getY() + ", max: " + max.getY());
-
-      for (int i = 0; i < polygon.size(); i++) {
-        ArrayList<Point> edges = new ArrayList<Point>();
-        edges = getEdges(i,  polygon);
-        System.out.print((i+1) + ". " + printThree(i, polygon.size(), edges));
-
-        int o = checkOrientation(edges);
-        if (o == 0) {
-          System.out.print(" -> WSPÓŁLINIOWE\n");
-        } else if (o == 1) {
-          System.out.print(" -> W PRAWO\n");
-          if (edges.get(1).getY() > max.getY() && isMinMax(edges).equals("max")) max = edges.get(1);
-          if (edges.get(1).getY() < min.getY() && isMinMax(edges).equals("min")) min = edges.get(1);
-        } else if (o == 2) {
-          System.out.print(" -> W LEWO\n");
-        }
-      }
-      System.out.println("min: " + min.getY() + ", max: " + max.getY());
+    public static void checkForCore() {
       if (max.getY() <= min.getY()) {
         System.out.println("JĄDRO: TAK!");
         int counter = 0;
@@ -188,7 +185,11 @@ public class App {
         for (int i = 0; i < polygon.size(); i++) {
           ArrayList<Point> retrievedPoints = new ArrayList<Point>();
           if (i < polygon.size()-1) {
-            retrievedPoints.addAll(calculateNewPoint(i + counter, "max", polygon.get(i), polygon.get(i+1)));
+            if (polygon.get(i).getY() > max.getY() && polygon.get(i+1).getY() < max.getY()) {
+              retrievedPoints.addAll(calculateNewPoint(i + counter, "max", polygon.get(i), polygon.get(i+1)));
+            } else {
+              retrievedPoints.addAll(calculateNewPoint(i + counter-1, "max", polygon.get(i), polygon.get(i+1)));
+            }
             counter += retrievedPoints.size();
             if (polygon.get(i).getY() > min.getY() && polygon.get(i+1).getY() < min.getY()) {
               retrievedPoints.addAll(calculateNewPoint(i + counter-1, "min", polygon.get(i), polygon.get(i+1)));
@@ -213,14 +214,38 @@ public class App {
       } else {
         System.out.println("JĄDRO: NIE!");
       }
+    }
 
-      prepareCorePolygon();
-      Window.display();
-
+    public static void displayPerimeter() {
       if (min.getY() > max.getY()) {
         System.out.println("OBWÓD: " + calculatePerimeter(corePolygon));
       } else {
         System.out.println("OBWÓD: brak");
       }
+    }
+
+    public static void main(String args[]) {
+      if (args.length > 0) {
+        inputFileName = args[0];
+      } else {
+        System.out.println("Nie wybrano pliku.");
+        System.exit(0);
+      }
+
+      FileManager fm = new FileManager();
+      polygon = fm.preparePolygon(inputFileName);
+
+      checkPolygon();
+
+      setMinMax();
+      displayMinMax();
+      displayOrientation();
+      displayMinMax();
+
+      checkForCore();
+      prepareCorePolygon();
+      displayPerimeter();
+
+      Window.display();
     }
 }
