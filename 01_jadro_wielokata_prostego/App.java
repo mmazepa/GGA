@@ -146,8 +146,6 @@ public class App {
       } else if (polygon.size() == 0) {
         System.out.println("Nie podano punktów.");
         System.exit(0);
-      } else {
-        // System.out.println("JĄDRO: Jeszcze nie wiadomo...");
       }
 
       setMinMax();
@@ -180,13 +178,9 @@ public class App {
         if (i < polygon.size()-1) {
           retrievedPoints.addAll(calculateNewPoint("min", polygon.get(i), polygon.get(i+1)));
           retrievedPoints.addAll(calculateNewPoint("max", polygon.get(i), polygon.get(i+1)));
-          // calculateNewPoint("min", polygon.get(i), polygon.get(i+1));
-          // calculateNewPoint("max", polygon.get(i), polygon.get(i+1));
         } else {
           retrievedPoints.addAll(calculateNewPoint("min", polygon.get(polygon.size()-1), polygon.get(0)));
           retrievedPoints.addAll(calculateNewPoint("max", polygon.get(polygon.size()-1), polygon.get(0)));
-          // calculateNewPoint("min", polygon.get(polygon.size()-1), polygon.get(0));
-          // calculateNewPoint("max", polygon.get(polygon.size()-1), polygon.get(0));
         }
 
         if (retrievedPoints.size() > 0) {
@@ -211,26 +205,8 @@ public class App {
               corePolygon.add(corePolygon.size(), retrievedPoints.get(1));
             System.out.println("(3)Inserting: " + retrievedPoints.size());
           }
-
-          // if (retrievedPoints.get(0).getY() > polygon.get(i).getY())
-          //   corePolygon.add(i, retrievedPoints.get(0));
-          // else
-          //   corePolygon.add(i+1, retrievedPoints.get(0));
-          //
-          // if (retrievedPoints.size() == 2) {
-          //   newPoints.add(retrievedPoints.get(1));
-          //   // corePolygon.add(i+2, retrievedPoints.get(1));
-          //   if (retrievedPoints.get(1).getY() > polygon.get(i).getY())
-          //     corePolygon.add(i+1, retrievedPoints.get(1));
-          //   else
-          //     corePolygon.add(i+2, retrievedPoints.get(1));
-          // }
         }
       }
-
-      // for (int i = 0; i < newPoints.size(); i++) {
-      //   System.out.println("(" + newPoints.get(i).getX() + ", " + newPoints.get(i).getY() + ")");
-      // }
 
       prepareCorePolygon();
       Window.display();
