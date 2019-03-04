@@ -206,10 +206,8 @@ public class App {
             }
             counter += retrievedPoints.size();
           } else {
-            // if (i + counter-1 < polygon.size()) {
-              retrievedPoints.addAll(calculateNewPoint(i + counter-1, "max", polygon.get(polygon.size()-1), polygon.get(0)));
-              retrievedPoints.addAll(calculateNewPoint(i + counter-1, "min", polygon.get(polygon.size()-1), polygon.get(0)));
-            // }
+            retrievedPoints.addAll(calculateNewPoint(i + counter-1, "max", polygon.get(polygon.size()-1), polygon.get(0)));
+            retrievedPoints.addAll(calculateNewPoint(i + counter-1, "min", polygon.get(polygon.size()-1), polygon.get(0)));
           }
 
           if (retrievedPoints.size() > 0) {
