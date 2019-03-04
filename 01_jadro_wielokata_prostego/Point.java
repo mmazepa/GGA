@@ -22,4 +22,8 @@ public class Point {
   public double getY() {
     return y;
   }
+
+  public String toString() {
+    return "(" + (double)Math.round(x*1000)/1000 + ", " + (double)Math.round(y*1000)/1000 + ")";
+  }
 }

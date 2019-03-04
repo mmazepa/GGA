@@ -18,7 +18,7 @@ public class App {
     }
 
     public static String printOne(int num, Point p) {
-      return "P" + num + "(" + p.getX() + ", " + p.getY() + ")";
+      return "P" + num + p.toString();
     }
 
     public static String printThree(int num, int max, ArrayList<Point> edges) {
@@ -111,7 +111,7 @@ public class App {
       for (int i = 0; i < corePolygon.size(); i++) {
         if (i == 3 || i == 6 || i == 12 || i == 13) System.out.print("-> ");
         else System.out.print("   ");
-        System.out.println((i+1) + ". (" + corePolygon.get(i).getX() + ", " + corePolygon.get(i).getY() + ")");
+        System.out.println((i+1) + ". " + corePolygon.get(i).toString());
       }
 
       for (int i = corePolygon.size()-1; i >= 0; i--) {
@@ -125,7 +125,7 @@ public class App {
       for (int i = 0; i < corePolygon.size(); i++) {
         if (i == 1 || i == 4 || i == 6 || i == 7) System.out.print("-> ");
         else System.out.print("   ");
-        System.out.println((i+1) + ". (" + corePolygon.get(i).getX() + ", " + corePolygon.get(i).getY() + ")");
+        System.out.println((i+1) + ". " + corePolygon.get(i).toString());
       }
     }
 

@@ -44,7 +44,7 @@ public class Window extends JPanel {
       g.setColor(Color.BLACK);
       g.drawString("o", toInt(50+(x*50)-3), toInt(450-(y*50)+5));
       g.setColor(Color.DARK_GRAY);
-      g.drawString("(" + x + ", " + y + ")", toInt(25+(x*50)), toInt(450-(y*50)-5));
+      g.drawString(App.polygon.get(i).toString(), toInt(25+(x*50)), toInt(450-(y*50)-5));
     }
     g.setColor(Color.BLACK);
     g.drawPolygon(p);
@@ -60,7 +60,7 @@ public class Window extends JPanel {
   public static void drawNewPoint(Graphics g, Point p) {
     g.setColor(Color.MAGENTA);
     g.drawString("o", toInt(50+(p.getX()*50)-3), toInt(450-(p.getY()*50)+5));
-    g.drawString("(" + p.getX() + ", " + p.getY() + ")", toInt(25+(p.getX()*50)), toInt(450-(p.getY()*50)-5));
+    g.drawString(p.toString(), toInt(25+(p.getX()*50)), toInt(450-(p.getY()*50)-5));
   }
 
   public static void display() {
