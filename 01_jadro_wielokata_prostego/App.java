@@ -60,17 +60,46 @@ public class App {
     public static void searchForMinMax() {
       for (int i = 0; i < polygon.size(); i++) {
         ArrayList<Point> edges = new ArrayList<Point>();
+        ArrayList<Point> tmpEdges = new ArrayList<Point>();
         edges = getEdges(i,  polygon);
         System.out.print((i+1) + ". " + printThree(i, polygon.size(), edges));
+
+        if (edges.get(0).getY() == edges.get(1).getY() && polygon.get(i) != polygon.get(0)) {
+          tmpEdges.add(polygon.get(i-1));
+          tmpEdges.add(edges.get(1));
+          tmpEdges.add(edges.get(2));
+          edges = tmpEdges;
+        }
+
+        if (edges.get(1).getY() == edges.get(2).getY() && polygon.get(i) != polygon.get(polygon.size()-1)) {
+          tmpEdges.add(edges.get(0));
+          tmpEdges.add(edges.get(1));
+          tmpEdges.add(polygon.get(i+1));
+          edges = tmpEdges;
+        }
+
+        if (edges.get(1).getY() == edges.get(2).getY() && polygon.get(i) == polygon.get(polygon.size()-2)) {
+          tmpEdges.add(polygon.get(polygon.size()-1));
+          tmpEdges.add(polygon.get(0));
+          tmpEdges.add(polygon.get(1));
+          edges = tmpEdges;
+        }
+
+        if (edges.get(1).getY() == edges.get(2).getY() && polygon.get(i) == polygon.get(polygon.size()-1)) {
+          tmpEdges.add(polygon.get(polygon.size()-2));
+          tmpEdges.add(polygon.get(polygon.size()-1));
+          tmpEdges.add(polygon.get(0));
+          edges = tmpEdges;
+        }
 
         int o = checkOrientation(edges);
         if (o == 0) {
           System.out.print(" -> WSPÓŁLINIOWE\n");
         } else if (o == 1) {
           System.out.print(" -> W PRAWO\n");
-          if (edges.get(1).getY() >= max.getY() && isMinMax(edges).equals("max"))
+          if (edges.get(1).getY() > max.getY() && isMinMax(edges).equals("max"))
             max = edges.get(1);
-          if (edges.get(1).getY() <= min.getY() && isMinMax(edges).equals("min"))
+          if (edges.get(1).getY() < min.getY() && isMinMax(edges).equals("min"))
             min = edges.get(1);
         } else if (o == 2) {
           System.out.print(" -> W LEWO\n");
