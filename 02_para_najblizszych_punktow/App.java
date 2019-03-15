@@ -54,7 +54,7 @@ public class App {
       if (side == "S1") difference = middlePoint.getX() - point.getX();
       else if (side == "S2") difference = point.getX() - middlePoint.getX();
 
-      if (difference < lowest) thirdArray.add(point);
+      if (difference <= lowest) thirdArray.add(point);
     }
     return thirdArray;
   }

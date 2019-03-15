@@ -65,8 +65,8 @@ public class Window extends JPanel {
     drawAreaRectangle(g, cm.GRAY);
 
     drawAllPoints(g, App.points, cm.BLACK);
-    drawAllPoints(g, App.s1x, cm.RED);
-    drawAllPoints(g, App.s2x, cm.BLUE);
+    drawAllPoints(g, App.s3_1, cm.RED);
+    drawAllPoints(g, App.s3_2, cm.BLUE);
 
     drawAndConnect(g, App.lowest_s1_p1, App.lowest_s1_p2, cm.RED, cm.PINK);
     drawAndConnect(g, App.lowest_s2_p1, App.lowest_s2_p2, cm.BLUE, cm.CYAN);
