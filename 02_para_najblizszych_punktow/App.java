@@ -5,6 +5,20 @@ public class App {
   public static String inputFileName = new String();
   public static int middle = 0;
   public static Point middlePoint;
+  public static double lowest = 0;
+
+  public static Point lowest_s1_p1;
+  public static Point lowest_s1_p2;
+  public static Point lowest_s2_p1;
+  public static Point lowest_s2_p2;
+
+  public static ArrayList<Point> pointsByX = new ArrayList<Point>();
+  public static ArrayList<Point> pointsByY = new ArrayList<Point>();
+
+  public static ArrayList<Point> s1x = new ArrayList<Point>();
+  public static ArrayList<Point> s1y = new ArrayList<Point>();
+  public static ArrayList<Point> s2x = new ArrayList<Point>();
+  public static ArrayList<Point> s2y = new ArrayList<Point>();
 
   public static FileManager fm = new FileManager();
   public static PointManager pm = new PointManager();
@@ -23,9 +37,8 @@ public class App {
     }
 
     points = fm.loadPoints(inputFileName);
-
-    ArrayList<Point> pointsByX = pm.sortByX(new ArrayList(points));
-    ArrayList<Point> pointsByY = pm.sortByY(new ArrayList(points));
+    pointsByX = pm.sortByX(new ArrayList(points));
+    pointsByY = pm.sortByY(new ArrayList(points));
 
     setMiddle(pointsByX);
     System.out.println(middle + " : " + middlePoint.toString());
@@ -36,11 +49,6 @@ public class App {
     pm.displayPoints(pointsByX);
     System.out.println("SY:");
     pm.displayPoints(pointsByY);
-
-    ArrayList<Point> s1x = new ArrayList<Point>();
-    ArrayList<Point> s1y = new ArrayList<Point>();
-    ArrayList<Point> s2x = new ArrayList<Point>();
-    ArrayList<Point> s2y = new ArrayList<Point>();
 
     s1x.addAll(pointsByX.subList(0, middle));
     s1y.addAll(pointsByY.subList(0, middle));
@@ -55,6 +63,17 @@ public class App {
     pm.displayPoints(s2x);
     System.out.println("S1Y:");
     pm.displayPoints(s2y);
+
+    double lowest_s1 = pm.getLowestDistance("S1", s1x);
+    double lowest_s2 = pm.getLowestDistance("S2", s2x);
+
+    System.out.print("\n");
+    System.out.println("LOWEST DISTANCE:");
+    System.out.println("   S1: " + lowest_s1 + ", S2: " + lowest_s2);
+
+    System.out.println("ANSWER:");
+    lowest = (lowest_s1 < lowest_s2) ? lowest_s1 : lowest_s2;
+    System.out.println("   " + lowest);
 
     Window.display();
   }

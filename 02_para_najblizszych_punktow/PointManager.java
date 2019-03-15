@@ -15,6 +15,25 @@ public class PointManager {
     return Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(), 2));
   }
 
+  public static double getLowestDistance(String area, ArrayList<Point> points) {
+    double lowestDistance = getDistance(points.get(0), points.get(1));
+    for (int i = 0; i < points.size(); i++) {
+      for (int j = 0; j < points.size(); j++) {
+        if (points.get(i) != points.get(j) && getDistance(points.get(i), points.get(j)) < lowestDistance) {
+          lowestDistance = getDistance(points.get(i), points.get(j));
+          if (area == "S1") {
+            App.lowest_s1_p1 = points.get(i);
+            App.lowest_s1_p2 = points.get(j);
+          } else if (area == "S2") {
+            App.lowest_s2_p1 = points.get(i);
+            App.lowest_s2_p2 = points.get(j);
+          }
+        }
+      }
+    }
+    return lowestDistance;
+  }
+
   public static ArrayList<Point> sortByX(ArrayList<Point> pointsByX) {
     Collections.sort(pointsByX, new Comparator<Point>() {
       @Override
