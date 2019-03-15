@@ -12,7 +12,7 @@ w roku akademickim 2018/2019.
   </tr>
   <tr>
     <td>Jądro wielokąta prostego</td>
-    <td>05.03.2019</td>
+    <td>04.03.2019</td>
     <td>5 pkt</td>
   </tr>
   <tr>
