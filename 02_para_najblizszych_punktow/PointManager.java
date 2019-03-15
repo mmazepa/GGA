@@ -5,10 +5,20 @@ import java.util.Comparator;
 public class PointManager {
   public static void displayPoints(ArrayList<Point> points) {
     System.out.println("Number of points: " + points.size());
-    // System.out.println("Index of middle:  " + points.size()/2);
+
+    System.out.print("   X: ");
     for (Point point : points) {
-      System.out.println("   " + point.toString());
+      if (point.getX() < 10) System.out.print(" ");
+      System.out.print(point.getX() + " ");
     }
+    System.out.print("\n");
+
+    System.out.print("   Y: ");
+    for (Point point : points) {
+      if (point.getY() < 10) System.out.print(" ");
+      System.out.print(point.getY() + " ");
+    }
+    System.out.print("\n");
   }
 
   public static double getDistance(Point p1, Point p2) {
@@ -32,6 +42,22 @@ public class PointManager {
       }
     }
     return lowestDistance;
+  }
+
+  public static double getLowestDistanceFromThirdArray(ArrayList<Point> arr1, ArrayList<Point> arr2, double lowest) {
+    double lowest_s3 = lowest;
+    if (arr1.size() > 0 && arr2.size() > 0) {
+      for (Point point1 : arr1) {
+        for (Point point2 : arr2) {
+          if (getDistance(point1, point2) < lowest_s3) {
+            lowest_s3 = getDistance(point1, point2);
+            App.lowest_s3_p1 = point1;
+            App.lowest_s3_p2 = point2;
+          }
+        }
+      }
+    }
+    return lowest_s3;
   }
 
   public static ArrayList<Point> sortByX(ArrayList<Point> pointsByX) {
