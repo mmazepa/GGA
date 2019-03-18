@@ -3,22 +3,23 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class PointManager {
+  public static void displayHalfPoints(String sign, ArrayList<Point> points) {
+    System.out.print("   " + sign + ": ");
+    for (Point point : points) {
+      double value = 0;
+      if (sign.equals("X")) value = point.getX();
+      else if (sign.equals("Y")) value = point.getY();
+
+      if (value < 10) System.out.print(" ");
+      System.out.print(value + " ");
+    }
+    System.out.print("\n");
+  }
+
   public static void displayPoints(ArrayList<Point> points) {
     System.out.println("Number of points: " + points.size());
-
-    System.out.print("   X: ");
-    for (Point point : points) {
-      if (point.getX() < 10) System.out.print(" ");
-      System.out.print(point.getX() + " ");
-    }
-    System.out.print("\n");
-
-    System.out.print("   Y: ");
-    for (Point point : points) {
-      if (point.getY() < 10) System.out.print(" ");
-      System.out.print(point.getY() + " ");
-    }
-    System.out.print("\n");
+    displayHalfPoints("X", points);
+    displayHalfPoints("Y", points);
   }
 
   public static double getDistance(Point p1, Point p2) {
@@ -26,25 +27,35 @@ public class PointManager {
   }
 
   public static double getLowestDistance(String area, ArrayList<Point> points) {
-    double lowestDistance = getDistance(points.get(0), points.get(1));
-    for (int i = 0; i < points.size(); i++) {
-      for (int j = 0; j < points.size(); j++) {
-        if ((i != j) && (getDistance(points.get(i), points.get(j)) <= lowestDistance)) {
-          lowestDistance = getDistance(points.get(i), points.get(j));
-          if (area == "S1") {
-            App.lowest_s1_p1 = points.get(i);
-            App.lowest_s1_p2 = points.get(j);
-          } else if (area == "S2") {
-            App.lowest_s2_p1 = points.get(i);
-            App.lowest_s2_p2 = points.get(j);
+    double lowestDistance = 0;
+    if (points.size() > 1) {
+      lowestDistance = getDistance(points.get(0), points.get(1));
+      for (int i = 0; i < points.size(); i++) {
+        for (int j = 0; j < points.size(); j++) {
+          if (i != j) {
+            if (getDistance(points.get(i), points.get(j)) <= lowestDistance) {
+              lowestDistance = getDistance(points.get(i), points.get(j));
+              if (area == "S1") {
+                App.lowest_s1_p1 = points.get(i);
+                App.lowest_s1_p2 = points.get(j);
+              } else if (area == "S2") {
+                App.lowest_s2_p1 = points.get(i);
+                App.lowest_s2_p2 = points.get(j);
+              }
+            }
           }
         }
       }
-    }
+    } else if (points.size() <= 1) return -1;
     return lowestDistance;
   }
 
   public static double getPartialLowestFromThirdArray(String direction, ArrayList<Point> arr1, ArrayList<Point> arr2, double lowest) {
+    if (lowest == -1) {
+      System.out.println("   ===> Nothing to compare.");
+      return -1;
+    }
+
     double lowest_s3 = lowest;
 
     System.out.println(direction + ":");
@@ -93,9 +104,9 @@ public class PointManager {
       System.out.print("\n");
     }
 
-    if (lowest_s3_1 == -1) lowest_s3 = lowest_s3_2;
+    if (lowest_s3_1 == -1 && lowest_s3_2 == -1) return -1;
+    else if (lowest_s3_1 == -1) lowest_s3 = lowest_s3_2;
     else if (lowest_s3_2 == -1) lowest_s3 = lowest_s3_1;
-    else if (lowest_s3_1 == -1 && lowest_s3_2 == -1) return -1;
     else {
       if (lowest_s3_1 <= lowest_s3_2) lowest_s3 = lowest_s3_1;
       else lowest_s3 = lowest_s3_2;
