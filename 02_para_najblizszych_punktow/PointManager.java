@@ -29,7 +29,7 @@ public class PointManager {
     double lowestDistance = getDistance(points.get(0), points.get(1));
     for (int i = 0; i < points.size(); i++) {
       for (int j = 0; j < points.size(); j++) {
-        if (points.get(i) != points.get(j) && getDistance(points.get(i), points.get(j)) < lowestDistance) {
+        if (points.get(i) != points.get(j) && getDistance(points.get(i), points.get(j)) <= lowestDistance) {
           lowestDistance = getDistance(points.get(i), points.get(j));
           if (area == "S1") {
             App.lowest_s1_p1 = points.get(i);
@@ -49,7 +49,7 @@ public class PointManager {
     if (arr1.size() > 0 && arr2.size() > 0) {
       for (Point point1 : arr1) {
         for (Point point2 : arr2) {
-          if (getDistance(point1, point2) < lowest_s3) {
+          if (getDistance(point1, point2) <= lowest_s3) {
             lowest_s3 = getDistance(point1, point2);
             App.lowest_s3_p1 = point1;
             App.lowest_s3_p2 = point2;

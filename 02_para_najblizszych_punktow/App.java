@@ -6,6 +6,7 @@ public class App {
   public static int middle = 0;
   public static Point middlePoint;
   public static double lowest = 0;
+  public static double lowest_s1_s2;
 
   public static Point lowest_s1_p1;
   public static Point lowest_s1_p2;
@@ -54,24 +55,46 @@ public class App {
       if (side == "S1") difference = middlePoint.getX() - point.getX();
       else if (side == "S2") difference = point.getX() - middlePoint.getX();
 
-      if (difference <= lowest) thirdArray.add(point);
+      if (difference <= lowest_s1_s2) thirdArray.add(point);
     }
     return thirdArray;
+  }
+
+  public static String showTwo(Point p1, Point p2) {
+    return p1.toString() + ", " + p2.toString();
   }
 
   public static void displayAnswer(boolean isThirdNotEmpty, double lowest_s1, double lowest_s2, double lowest_s3) {
     System.out.print("\n");
     System.out.println("LOWEST DISTANCE:");
-    System.out.println("   S1: " + lowest_s1 + ", S2: " + lowest_s2);
+    System.out.println("   S1: " + lowest_s1 + " ---> " + showTwo(lowest_s1_p1, lowest_s1_p2));
+    System.out.println("   S2: " + lowest_s2  + " ---> " + showTwo(lowest_s2_p1, lowest_s2_p2));
     if (isThirdNotEmpty) {
-      System.out.println("   S3: " + lowest_s3);
+      System.out.println("   S3: " + lowest_s3  + " ---> " + showTwo(lowest_s3_p1, lowest_s3_p2));
     }
-    System.out.println("ANSWER:");
+
+    System.out.println("CALCULATION:");
     if (isThirdNotEmpty) {
       System.out.println("   lowest = min(" + lowest_s1 + ", " + lowest_s2 + ", " + lowest_s3 + ")");
     } else {
       System.out.println("   lowest = min(" + lowest_s1 + ", " + lowest_s2 + ")");
     }
+
+    System.out.println("ANSWER:");
+    if (isThirdNotEmpty) {
+      if (lowest_s1 <= lowest_s2 && lowest_s1 <= lowest_s3)
+        System.out.println("   closest points: " + showTwo(lowest_s1_p1, lowest_s1_p2));
+      else if (lowest_s2 < lowest_s1 && lowest_s2 < lowest_s3)
+        System.out.println("   closest points: " + showTwo(lowest_s2_p1, lowest_s2_p2));
+      else if (lowest_s3 < lowest_s1 && lowest_s3 < lowest_s2)
+        System.out.println("   closest points: " + showTwo(lowest_s3_p1, lowest_s3_p2));
+    } else {
+      if (lowest_s1 <= lowest_s2)
+        System.out.println("   closest points: " + showTwo(lowest_s1_p1, lowest_s1_p2));
+      else if (lowest_s2 < lowest_s1)
+        System.out.println("   closest points: " + showTwo(lowest_s2_p1, lowest_s2_p2));
+    }
+
     System.out.println("   lowest = " + lowest);
   }
 
@@ -102,17 +125,19 @@ public class App {
     double lowest_s1 = pm.getLowestDistance("S1", s1x);
     double lowest_s2 = pm.getLowestDistance("S2", s2x);
 
-    lowest = (lowest_s1 < lowest_s2) ? lowest_s1 : lowest_s2;
+    lowest_s1_s2 = (lowest_s1 < lowest_s2) ? lowest_s1 : lowest_s2;
 
     fillTheThirdArray("S1", s1x, s3_1);
     fillTheThirdArray("S2", s2x, s3_2);
 
-    double lowest_s3 = pm.getLowestDistanceFromThirdArray(s3_1, s3_2, lowest);
+    double lowest_s3 = pm.getLowestDistanceFromThirdArray(s3_1, s3_2, lowest_s1_s2);
 
     if (s3_1.size() > 0 && s3_2.size() > 0) {
       arrayDisplayer("S3_1", s3_1);
       arrayDisplayer("S3_2", s3_2);
-      lowest = (lowest < lowest_s3) ? lowest : lowest_s3;
+      lowest = (lowest_s1_s2 < lowest_s3) ? lowest_s1_s2 : lowest_s3;
+    } else {
+      lowest = lowest_s1_s2;
     }
 
     boolean isThirdNotEmpty = (s3_1.size() > 0 && s3_2.size() > 0);

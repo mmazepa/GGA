@@ -35,11 +35,11 @@ public class Window extends JPanel {
 
   public static void drawAreaRectangle(Graphics g, Color color) {
     g.setColor(cm.LIGHT_GRAY);
-    g.fillRect(toInt(50+((App.middlePoint.getX()-App.lowest)*50)+6), 0, toInt(((2*App.lowest)*50)+1), size);
+    g.fillRect(toInt(50+((App.middlePoint.getX()-App.lowest_s1_s2)*50)+6), 0, toInt(((2*App.lowest_s1_s2)*50)+1), size);
 
     drawDashedVerticalLine(g, App.middlePoint.getX(), cm.BLACK);
-    drawDashedVerticalLine(g, App.middlePoint.getX() - App.lowest, color);
-    drawDashedVerticalLine(g, App.middlePoint.getX() + App.lowest, color);
+    drawDashedVerticalLine(g, App.middlePoint.getX() - App.lowest_s1_s2, color);
+    drawDashedVerticalLine(g, App.middlePoint.getX() + App.lowest_s1_s2, color);
   }
 
   public static void drawAllPoints(Graphics g, ArrayList<Point> points, Color color) {
