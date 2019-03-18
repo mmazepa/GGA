@@ -64,24 +64,30 @@ public class App {
     return p1.toString() + ", " + p2.toString();
   }
 
+  public static void showResult(String area, double lowest, Point p1, Point p2) {
+    System.out.println("   " + area + ": " + lowest + " ---> " + showTwo(p1, p2));
+  }
+
   public static void displayAnswer(boolean isThirdNotEmpty, double lowest_s1, double lowest_s2, double lowest_s3) {
+    boolean isThirdNotLessThanZero = (lowest_s3 != -1);
+
     System.out.print("\n");
     System.out.println("LOWEST DISTANCE:");
-    System.out.println("   S1: " + lowest_s1 + " ---> " + showTwo(lowest_s1_p1, lowest_s1_p2));
-    System.out.println("   S2: " + lowest_s2  + " ---> " + showTwo(lowest_s2_p1, lowest_s2_p2));
-    if (isThirdNotEmpty) {
-      System.out.println("   S3: " + lowest_s3  + " ---> " + showTwo(lowest_s3_p1, lowest_s3_p2));
+    showResult("S1", lowest_s1, lowest_s1_p1, lowest_s1_p2);
+    showResult("S2", lowest_s2, lowest_s1_p2, lowest_s2_p2);
+    if (isThirdNotEmpty && isThirdNotLessThanZero) {
+      showResult("S3", lowest_s3, lowest_s3_p1, lowest_s3_p2);
     }
 
     System.out.println("CALCULATION:");
-    if (isThirdNotEmpty) {
+    if (isThirdNotEmpty && isThirdNotLessThanZero) {
       System.out.println("   lowest = min(" + lowest_s1 + ", " + lowest_s2 + ", " + lowest_s3 + ")");
     } else {
       System.out.println("   lowest = min(" + lowest_s1 + ", " + lowest_s2 + ")");
     }
 
     System.out.println("ANSWER:");
-    if (isThirdNotEmpty) {
+    if (isThirdNotEmpty && isThirdNotLessThanZero) {
       if (lowest_s1 <= lowest_s2 && lowest_s1 <= lowest_s3)
         System.out.println("   closest points: " + showTwo(lowest_s1_p1, lowest_s1_p2));
       else if (lowest_s2 < lowest_s1 && lowest_s2 < lowest_s3)
@@ -129,13 +135,16 @@ public class App {
 
     fillTheThirdArray("S1", s1x, s3_1);
     fillTheThirdArray("S2", s2x, s3_2);
+    s3_1 = pm.sortByY(s3_1);
+    s3_2 = pm.sortByY(s3_2);
 
     double lowest_s3 = pm.getLowestDistanceFromThirdArray(s3_1, s3_2, lowest_s1_s2);
 
     if (s3_1.size() > 0 && s3_2.size() > 0) {
       arrayDisplayer("S3_1", s3_1);
       arrayDisplayer("S3_2", s3_2);
-      lowest = (lowest_s1_s2 < lowest_s3) ? lowest_s1_s2 : lowest_s3;
+      if (lowest_s3 != -1) lowest = (lowest_s1_s2 < lowest_s3) ? lowest_s1_s2 : lowest_s3;
+      else lowest = lowest_s1_s2;
     } else {
       lowest = lowest_s1_s2;
     }
