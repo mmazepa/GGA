@@ -4,8 +4,8 @@
 # Log file
 *.log
 
-# Package Files #
-#*.jar
+# Package Files
+*.jar
 *.war
 *.ear
 *.zip
@@ -15,4 +15,3 @@
 # Ignore work files
 .vscode
 .~*
-
