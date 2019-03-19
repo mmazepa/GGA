@@ -49,13 +49,24 @@ public class App {
     pm.displayPoints(array);
   }
 
+ public static boolean compareTwoPoints(Point p1, Point p2) {
+   if ((p1.getX() < p2.getX()) || (p1.getX() == p2.getX() && p1.getY() < p2.getY()))
+     return true;
+   else if (p1.getX() > p2.getX() || (p1.getX() == p2.getX() && p1.getY() > p2.getY()))
+     return false;
+   else
+     return true;
+ }
+
   public static void fillPartialArrays() {
     s1x.addAll(pointsByX.subList(0, middle));
     s2x.addAll(pointsByX.subList(middle, pointsByX.size()));
 
     for (int i = 0; i < pointsByY.size(); i++) {
-      if (s1x.contains(pointsByY.get(i))) s1y.add(pointsByY.get(i));
-      if (s2x.contains(pointsByY.get(i))) s2y.add(pointsByY.get(i));
+      if (compareTwoPoints(pointsByY.get(i), middlePoint))
+        s1y.add(pointsByY.get(i));
+      else
+        s2y.add(pointsByY.get(i));
     }
   }
 
