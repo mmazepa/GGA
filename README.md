@@ -21,6 +21,11 @@ w roku akademickim 2018/2019.
     <td>-</td>
   </tr>
   <tr>
+    <td>kD-drzewa/Dwuwymiarowe drzewa</td>
+    <td>01.04.2019</td>
+    <td>-</td>
+  </tr>
+  <tr>
     <td colspan="2"><b>SUMA:</b></td>
     <td>5/35</td>
   </tr>
