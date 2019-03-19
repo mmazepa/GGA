@@ -134,6 +134,9 @@ public class App {
     if (points.size() == 1) {
       System.out.println("There is only one point, can't calculate distance.");
       System.exit(0);
+    } else if (points.size() == 0) {
+      System.out.println("There are no points provided...");
+      System.exit(0);
     }
 
     pointsByX = pm.sortByX(new ArrayList(points));
@@ -192,11 +195,6 @@ public class App {
         System.out.println("   closest points: " + showTwo(points.get(2), points.get(0)));
         System.out.println("   lowest = " + pm.getDistance(points.get(2), points.get(0)));
       }
-      System.exit(0);
-    } else if (points.size() == 2) {
-      System.out.println("ANSWER:");
-      System.out.println("   closest points: " + showTwo(points.get(0), points.get(1)));
-      System.out.println("   lowest = " + pm.getDistance(points.get(0), points.get(1)));
       System.exit(0);
     } else if (points.size() == 2) {
       System.out.println("ANSWER:");
