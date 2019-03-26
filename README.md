@@ -18,20 +18,20 @@ w roku akademickim 2018/2019.
   <tr>
     <td>Para najbliższych punktów</td>
     <td>18.03.2019</td>
-    <td>3.5 pkt (szansa na 5 pkt)</td>
+    <td>5 pkt</td>
   </tr>
   <tr>
-    <td>kD-drzewa/Dwuwymiarowe drzewa</td>
+    <td>kD-drzewa</td>
     <td>01.04.2019</td>
     <td>-</td>
   </tr>
   <tr>
     <td colspan="2"><b>SUMA:</b></td>
-    <td>8.5/35 pkt (szansa na 10/35 pkt)</td>
+    <td>10/35 pkt</td>
   </tr>
   <tr>
     <td colspan="2"><b>PROCENT:</b></td>
-    <td>24% (szansa na 29%)</td>
+    <td>29%</td>
   </tr>
   <tr>
     <td colspan="2"><b>OCENA:</b></td>
