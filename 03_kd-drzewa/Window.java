@@ -23,15 +23,6 @@ public class Window extends JPanel {
     return integer;
   }
 
-  // public static void drawAreaRectangle(Graphics g, Color color) {
-  //   g.setColor(cm.LIGHT_GRAY);
-  //   g.fillRect(toInt(50+((App.middlePoint.getX()-App.lowest_s1_s2)*50)+6), 0, toInt(((2*App.lowest_s1_s2)*50)+1), size);
-  //
-  //   drawDashedVerticalLine(g, App.middlePoint.getX(), cm.BLACK);
-  //   drawDashedVerticalLine(g, App.middlePoint.getX() - App.lowest_s1_s2, color);
-  //   drawDashedVerticalLine(g, App.middlePoint.getX() + App.lowest_s1_s2, color);
-  // }
-
   public static void drawPoint(Graphics g, Point p, Color color) {
     g.setColor(color);
     g.setFont(g.getFont().deriveFont(20.0f));
@@ -47,10 +38,14 @@ public class Window extends JPanel {
     }
   }
 
+  public static void drawLine(Graphics g, double median, Color color) {
+    g.setColor(color);
+    g.drawLine(toInt(50+(median*50)+6), 0, toInt(50+(median*50)+6), size);
+  }
+
   public void paintComponent(Graphics g) {
     g.setFont(g.getFont().deriveFont(10.0f));
-    //drawAreaRectangle(g, cm.GRAY);
-
+    drawLine(g, App.lines.get(0), Color.GREEN);
     drawAllPoints(g, App.points, Color.BLACK);
   }
 
