@@ -22,6 +22,23 @@ public class PointManager {
     displayHalfPoints("Y", points);
   }
 
+  public static boolean checkIfDifferentAbscissaeAndOrdinates(ArrayList<Point> points) {
+    boolean isValid = true;
+    for (int i = 0; i < points.size(); i++) {
+      for (int j = 0; j < points.size(); j++) {
+        Point point1 = points.get(i);
+        Point point2 = points.get(j);
+        if (point1 != point2) {
+          if (point1.getX() == point2.getX() || point1.getY() == point2.getY()) {
+            System.out.println(point1.toString() + ", " + point2.toString());
+            isValid = false;
+          }
+        }
+      }
+    }
+    return isValid;
+  }
+
   public static ArrayList<Point> sortByX(ArrayList<Point> pointsByX) {
     Collections.sort(pointsByX, new Comparator<Point>() {
       @Override

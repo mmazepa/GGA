@@ -167,13 +167,12 @@ public class App {
     checkIfFileNameIsPassed(args);
     points = fm.loadPoints(inputFileName);
 
-    // if (points.size() == 1) {
-    //   exitOnPurpose("There is only one point, returning leaf...");
-    //   // System.out.println("There is only one point, returning leaf...");
-    //   // return that one leaf here...
-    // } else
+    if (!pm.checkIfDifferentAbscissaeAndOrdinates(points)) {
+      exitOnPurpose("Punkty nie mają różnych odciętych i/lub rzędnych!");
+    }
+
     if (points.size() == 0) {
-      exitOnPurpose("There are no points provided...");
+      exitOnPurpose("Nie podano punktów.");
     }
 
     points = pm.sortByX(points);
