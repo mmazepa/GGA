@@ -18,6 +18,11 @@ public class Window extends JPanel {
   private static int size = 600;
   private static String pointSign = "•";
 
+  // private static Color vColor = Color.GREEN;
+  private static Color vColor = new Color(0, 200, 0);
+  // private static Color hColor = Color.BLUE;
+  private static Color hColor = new Color(0, 0, 255);
+
   public static int toInt(double num) {
     int integer = (int) Math.round(num);
     return integer;
@@ -38,14 +43,38 @@ public class Window extends JPanel {
     }
   }
 
-  public static void drawLine(Graphics g, double median, Color color) {
+  public static void drawLine(String direction, Graphics g, double median, Color color, int min, int max) {
     g.setColor(color);
-    g.drawLine(toInt(50+(median*50)+6), 0, toInt(50+(median*50)+6), size);
+    int x = toInt(50+(median*50)+6);
+    int y = toInt(0.9*size-(median*50)-8);
+
+    if (direction.equals("vertical"))
+      g.drawLine(x, min, x, max);
+    else if (direction.equals("horizontal"))
+      g.drawLine(min, y, max, y);
+  }
+
+  public static void drawTreeLines(Graphics g, Node node) {
+    if (node.getType() != 'l') System.out.println("DRAWING: " + node.getType() + " -> " + node.getLocation());
+
+    int min = 0;
+    int max = size;
+
+    if (node.getType() == 'v') {
+      drawLine("vertical", g, node.getLocation(), vColor, min, max);
+    } else if (node.getType() == 'h') {
+      drawLine("horizontal", g, node.getLocation(), hColor, min, max);
+    }
+
+    if (!node.isLeaf()) {
+      if (node.getLeft() != null) drawTreeLines(g, node.getLeft());
+      if (node.getRight() != null) drawTreeLines(g, node.getRight());
+    }
   }
 
   public void paintComponent(Graphics g) {
     g.setFont(g.getFont().deriveFont(10.0f));
-    drawLine(g, App.lines.get(0), Color.GREEN);
+    drawTreeLines(g, App.tree);
     drawAllPoints(g, App.points, Color.BLACK);
   }
 
