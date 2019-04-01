@@ -75,7 +75,6 @@ public class Node {
   }
 
   public void setRegion(Region region) {
-    // this.region = region;
     this.region = new Region();
     this.region.x_min = region.x_min;
     this.region.x_max = region.x_max;

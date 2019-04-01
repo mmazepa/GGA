@@ -7,10 +7,15 @@ public class Region {
   public Region() {}
 
   public Region(Double x1, Double x2, Double y1, Double y2) {
-    x_min = x1;
-    x_max = x2;
-    y_min = y1;
-    y_max = y2;
+    double tmp;
+
+    if (x1 > x2) { tmp = x1; x1 = x2; x2 = tmp; }
+    if (y1 > y2) { tmp = y1; y1 = y2; y2 = tmp; }
+
+    this.x_min = x1;
+    this.x_max = x2;
+    this.y_min = y1;
+    this.y_max = y2;
   }
 
   public Region(Region r) {
@@ -26,14 +31,10 @@ public class Region {
   }
 
   public String toString() {
-    // double x1 = Math.round(this.x_min*1000)/1000;
-    // double x2 = Math.round(this.x_max*1000)/1000;
-    // double y1 = Math.round(this.y_min*1000)/1000;
-    // double y2 = Math.round(this.y_max*1000)/1000;
     double x1 = this.x_min;
     double x2 = this.x_max;
     double y1 = this.y_min;
     double y2 = this.y_max;
-    return "[ X: " + x1 + ", " + x2 + " | Y: " + y1 + ", " + y2 + "]";
+    return "[X: " + x1 + ", " + x2 + " | Y: " + y1 + ", " + y2 + "]";
   }
 }

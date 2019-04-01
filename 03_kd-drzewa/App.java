@@ -5,10 +5,12 @@ public class App {
   public static String inputFileName = new String();
   public static Region inputRegion = new Region();
 
+  public static Region boxRegion = new Region(0.0, 10.0, 0.0, 10.0);
   public static Node tree = new Node();
 
   public static FileManager fm = new FileManager();
   public static PointManager pm = new PointManager();
+
 
   public static void checkIfFileNameIsPassed(String[] args) {
     if (args.length > 0) {
@@ -52,8 +54,13 @@ public class App {
   }
 
   public static void displayLeftAndRight(int d, ArrayList<Point> left, ArrayList<Point> right) {
-    arrayDisplayer("d=" + d + "; LEFT LIST", left);
-    arrayDisplayer("d=" + d + "; RIGHT LIST", right);
+    if (d%2 == 0) {
+      arrayDisplayer("d=" + d + "; LEFT LIST", left);
+      arrayDisplayer("d=" + d + "; RIGHT LIST", right);
+    } else {
+      arrayDisplayer("d=" + d + "; TOP LIST", left);
+      arrayDisplayer("d=" + d + "; BOTTOM LIST", right);
+    }
   }
 
   public static Node kd_tree(ArrayList<Point> points, int d) {
@@ -67,10 +74,10 @@ public class App {
     char type;
 
     if (axis == 0) {
-      points = pm.sortByX(points); // raczej nie przejdzie... (!!!)
+      points = pm.sortByX(points);
       type = 'v';
     } else {
-      points = pm.sortByY(points); // raczej nie przejdzie... (!!!)
+      points = pm.sortByY(points);
       type = 'h';
     }
 
@@ -93,11 +100,7 @@ public class App {
 
     displayLeftAndRight(d, leftList, rightList);
 
-    // Node leftSubtree = kd_tree(leftList, d+1);
-    // Node rightSubtree = kd_tree(rightList, d+1);
     Node newNode = Node.createNewNode(median, type, null, kd_tree(leftList, d+1), kd_tree(rightList, d+1));
-
-    // System.out.println(node.getLeft().getPoint() + ", " + node.getRight().getPoint());
     return newNode;
   }
 
@@ -112,15 +115,11 @@ public class App {
 
         if (nodeRegion != null && location != null) {
           if (node.getType() == 'h') {
-            if (node.isLeft())
-              nodeRegion.x_max = location;
-            else
-              nodeRegion.x_min = location;
+            if (node.isLeft()) nodeRegion.x_max = location;
+            else nodeRegion.x_min = location;
           } else {
-            if (node.isLeft())
-              nodeRegion.y_max = location;
-            else
-              nodeRegion.y_min = location;
+            if (node.isLeft()) nodeRegion.y_max = location;
+            else nodeRegion.y_min = location;
           }
           node.setRegion(nodeRegion);
         }
@@ -145,7 +144,6 @@ public class App {
   }
 
   public static void displayTree(Node node, String prefix) {
-    //System.out.println("LOC: " + node.getLocation());
     if (!node.isLeaf()) {
       System.out.println(prefix + node + ", (" + node.getType() + ") mediana: " + node.getLocation() + ", " + node.getRegion().toString());
       if (node.getLeft() != null) displayTree(node.getLeft(), prefix + "|   ");
@@ -157,20 +155,19 @@ public class App {
 
   public static boolean liesInRegion(Region r, Point p) {
     boolean pointInRegion = false;
-    if (p.getX() >= r.x_min && p.getX() <= r.x_max) {
-      if (p.getY() >= r.y_min && p.getY() <= r.y_max) {
-        pointInRegion = true;
-      }
+    if (p.getX() >= r.x_min && p.getX() <= r.x_max
+    && p.getY() >= r.y_min && p.getY() <= r.y_max) {
+      pointInRegion = true;
     }
     return pointInRegion;
   }
 
   public static void reportOne(Point point) {
-    System.out.println("Report One: " + point.toString());
+    System.out.println("\nReport One: " + point.toString());
   }
 
   public static void reportSubtree(Node node) {
-    System.out.println("Report Subtree:");
+    System.out.println("\nReport Subtree:");
     displayTree(node, "");
   }
 
@@ -217,28 +214,25 @@ public class App {
     }
   }
 
-  public static void search_kd_tree(Node node, Region input) {
-    if (node.isLeaf()) {
-      if (liesInRegion(input, node.getPoint())) {
-        reportOne(node.getPoint());
-      }
-    } else {
-      if (node.getLeft() != null) {
-        if (fullyContained(node.getLeft().getRegion(), input)) {
-          reportSubtree(node.getLeft());
-        } else if (intersects(node.getLeft().getRegion(), input)) {
-          search_kd_tree(node.getLeft(), input);
-        }
-      }
-
-      if (node.getRight() != null) {
-        if (fullyContained(node.getRight().getRegion(), input)) {
-          reportSubtree(node.getRight());
-        } else if (intersects(node.getRight().getRegion(), input)) {
-          search_kd_tree(node.getRight(), input);
-        }
-      }
+  public static void checkLeaf(Node node) {
+    if (liesInRegion(inputRegion, node.getPoint())) {
+      reportOne(node.getPoint());
     }
+  }
+
+  public static void checkSubtree(Node node) {
+    if (fullyContained(node.getRegion(), inputRegion)) {
+      reportSubtree(node);
+    } else if (intersects(node.getRegion(), inputRegion)) {
+      search_kd_tree(node, inputRegion);
+    } else {
+      if (node.isLeaf()) checkLeaf(node);
+    }
+  }
+
+  public static void search_kd_tree(Node node, Region inputRegion) {
+    checkSubtree(node.getLeft());
+    checkSubtree(node.getRight());
   }
 
   public static void dealWithRegion(String[] args) {
@@ -269,7 +263,7 @@ public class App {
     pm.displayPoints(points);
 
     tree = kd_tree(points, 0);
-    tree.setRegion(new Region(-10.0, 10.0, -10.0, 10.0));
+    tree.setRegion(boxRegion);
     setRegions(tree);
 
     System.out.print("\n");
@@ -279,13 +273,6 @@ public class App {
     System.out.println("--------------------------------------------------\n");
 
     dealWithRegion(args);
-
-    // Region r1 = new Region(1.0, 5.0, 1.0, 5.0);
-    // Region r2 = new Region(2.0, 6.0, 2.0, 6.0);
-    //
-    // System.out.println("INTERSECTS:      " + intersects(r1, r2));
-    // System.out.println("FULLY CONTAINED: " + fullyContained(r1, r2));
-
     Window.display();
   }
 }
