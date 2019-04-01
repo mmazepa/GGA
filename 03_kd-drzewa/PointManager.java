@@ -22,13 +22,21 @@ public class PointManager {
     displayHalfPoints("Y", points);
   }
 
+  public static void checkPoints(ArrayList<Point> points) {
+    if (!checkIfDifferentAbscissaeAndOrdinates(points)) {
+      App.exitOnPurpose("Punkty nie mają różnych odciętych i/lub rzędnych!");
+    }
+
+    if (points.size() == 0) App.exitOnPurpose("Nie podano punktów.");
+  }
+
   public static boolean checkIfDifferentAbscissaeAndOrdinates(ArrayList<Point> points) {
     boolean isValid = true;
     for (int i = 0; i < points.size(); i++) {
       for (int j = 0; j < points.size(); j++) {
-        Point point1 = points.get(i);
-        Point point2 = points.get(j);
-        if (point1 != point2) {
+        if (i != j) {
+          Point point1 = points.get(i);
+          Point point2 = points.get(j);
           if (point1.getX() == point2.getX() || point1.getY() == point2.getY()) {
             System.out.println(point1.toString() + ", " + point2.toString());
             isValid = false;
