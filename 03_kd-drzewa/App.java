@@ -32,11 +32,8 @@ public class App {
     double median = 0;
     char type;
 
-    if (axis == 0) {
-      type = 'v';
-    } else {
-      type = 'h';
-    }
+    if (axis == 0) type = 'v';
+    else type = 'h';
 
     median = pm.getMedian(axis, points);
     System.out.println("MEDIAN: " + median);
