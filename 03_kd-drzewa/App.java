@@ -10,6 +10,7 @@ public class App {
 
   public static FileManager fm = new FileManager();
   public static PointManager pm = new PointManager();
+  public static VisualManager vm = new VisualManager();
 
 
   public static void checkIfFileNameIsPassed(String[] args) {
@@ -18,48 +19,6 @@ public class App {
     } else {
       System.out.println("Nie wybrano pliku.");
       System.exit(0);
-    }
-  }
-
-  public static void arrayDisplayer(String title, ArrayList<Point> array) {
-    System.out.println(title + ":");
-    pm.displayPoints(array);
-  }
-
-  public static double medianByX(ArrayList<Point> points) {
-    double median = 0;
-    int half = points.size()/2;
-    if (points.size()%2 == 0)
-      median = (points.get(half).getX() + points.get(half-1).getX())/2;
-    else
-      median = points.get(half).getX();
-    return median;
-  }
-
-  public static double medianByY(ArrayList<Point> points) {
-    double median = 0;
-    int half = points.size()/2;
-    if (points.size()%2 == 0)
-      median = (points.get(half).getY() + points.get(half-1).getY())/2;
-    else
-      median = points.get(half).getY();
-    return median;
-  }
-
-  public static double getMedian(int axis, ArrayList<Point> points) {
-    double median = 0;
-    if (axis == 0) median = medianByX(points);
-    else median = medianByY(points);
-    return median;
-  }
-
-  public static void displayLeftAndRight(int d, ArrayList<Point> left, ArrayList<Point> right) {
-    if (d%2 == 0) {
-      arrayDisplayer("d=" + d + "; LEFT LIST", left);
-      arrayDisplayer("d=" + d + "; RIGHT LIST", right);
-    } else {
-      arrayDisplayer("d=" + d + "; TOP LIST", left);
-      arrayDisplayer("d=" + d + "; BOTTOM LIST", right);
     }
   }
 
@@ -74,14 +33,12 @@ public class App {
     char type;
 
     if (axis == 0) {
-      points = pm.sortByX(points);
       type = 'v';
     } else {
-      points = pm.sortByY(points);
       type = 'h';
     }
 
-    median = getMedian(axis, points);
+    median = pm.getMedian(axis, points);
     System.out.println("MEDIAN: " + median);
 
     ArrayList<Point> leftList = new ArrayList<Point>();
@@ -98,9 +55,11 @@ public class App {
       else rightList.add(tmpPoint);
     }
 
-    displayLeftAndRight(d, leftList, rightList);
+    pm.displayLeftAndRight(d, leftList, rightList);
 
-    Node newNode = Node.createNewNode(median, type, null, kd_tree(leftList, d+1), kd_tree(rightList, d+1));
+    Node leftSubtree = kd_tree(leftList, d+1);
+    Node rightSubtree = kd_tree(rightList, d+1);
+    Node newNode = Node.createNewNode(median, type, null, leftSubtree, rightSubtree);
     return newNode;
   }
 
@@ -132,27 +91,6 @@ public class App {
     }
   }
 
-  public static void exitOnPurpose(String purpose) {
-    System.out.println(purpose);
-    System.exit(0);
-  }
-
-  public String spaces(int amount) {
-    String spaces = "";
-    for (int i = 0; i < amount; i++) spaces += " ";
-    return spaces;
-  }
-
-  public static void displayTree(Node node, String prefix) {
-    if (!node.isLeaf()) {
-      System.out.println(prefix + node + ", (" + node.getType() + ") mediana: " + node.getLocation() + ", " + node.getRegion().toString());
-      if (node.getLeft() != null) displayTree(node.getLeft(), prefix + "|   ");
-      if (node.getRight() != null) displayTree(node.getRight(), prefix + "|   ");
-    } else {
-      System.out.println(prefix + node.getPoint().toString() + " (" + node.getType() + ")");
-    }
-  }
-
   public static boolean liesInRegion(Region r, Point p) {
     boolean pointInRegion = false;
     if (p.getX() >= r.x_min && p.getX() <= r.x_max
@@ -163,31 +101,28 @@ public class App {
   }
 
   public static void reportOne(Point point) {
-    System.out.println("\nReport One: " + point.toString());
+    vm.displayFramed("Zgłaszam punkt", point.toString());
   }
 
   public static void reportSubtree(Node node) {
-    System.out.println("\nReport Subtree:");
-    displayTree(node, "");
+    vm.displayFramed("Zgłaszam całe poddrzewo");
+    node.print(0);
   }
 
   public static boolean fullyContained(Region node, Region input) {
     if (node != null && input != null) {
-      double x0 = input.x_min;
-      double y0 = input.y_min;
-      double width0 = input.x_max - x0;
-      double height0 = input.y_max - y0;
+      Point input_topRight = new Point(input.x_max, input.y_max);
+      Point input_bottomLeft = new Point(input.x_min, input.y_min);
+      Point node_topRight = new Point(node.x_max, node.y_max);
+      Point node_bottomLeft = new Point(node.x_min, node.y_min);
 
-      double x1 = node.x_min;
-      double y1 = node.y_min;
-      double width1 = node.x_max - x1;
-      double height1 = node.y_max - y1;
+      boolean cond1 = (node_bottomLeft.getX() >= input_bottomLeft.getX())
+      && (node_bottomLeft.getY() >= input_bottomLeft.getY());
 
-      boolean cond1 = (x1 >= x0) && (y1 >= y0);
-      boolean cond2 = (x1 + width1) <= (x0 + width0);
-      boolean cond3 = (y1 + height1) <= (y0 + height0);
+      boolean cond2 = (node_topRight.getX() <= input_topRight.getX())
+      && (node_topRight.getY() <= input_topRight.getY());
 
-      return cond1 && cond2 && cond3;
+      return cond1 && cond2;
     } else {
       return false;
     }
@@ -231,8 +166,12 @@ public class App {
   }
 
   public static void search_kd_tree(Node node, Region inputRegion) {
-    checkSubtree(node.getLeft());
-    checkSubtree(node.getRight());
+    if (node.isLeaf()) {
+      checkLeaf(node);
+    } else {
+      checkSubtree(node.getLeft());
+      checkSubtree(node.getRight());
+    }
   }
 
   public static void dealWithRegion(String[] args) {
@@ -247,12 +186,22 @@ public class App {
       if (y1 > y2) { tmp = y1; y1 = y2; y2 = tmp; }
 
       inputRegion = new Region(x1, x2, y1, y2);
-      System.out.println("OBSZAR ZAPYTANIA: " + inputRegion.toString());
+      System.out.print("\n");
+      vm.displayFramed("OBSZAR ZAPYTANIA: " + inputRegion.toString());
 
+      System.out.print("\n");
+      vm.title("Raport");
       search_kd_tree(tree, inputRegion);
+      vm.horizontalLine(50);
+      System.out.print("\n");
     } else {
       System.out.println("Nie podano obszaru zapytania, pomijam...");
     }
+  }
+
+  public static void exitOnPurpose(String purpose) {
+    System.out.println(purpose);
+    System.exit(0);
   }
 
   public static void main(String args[]) {
@@ -267,12 +216,13 @@ public class App {
     setRegions(tree);
 
     System.out.print("\n");
-    System.out.println("kD-Drzewo:");
-    System.out.println("--------------------------------------------------");
-    displayTree(tree, "");
-    System.out.println("--------------------------------------------------\n");
+    vm.title("kD-drzewo");
+    tree.print(0);
+    vm.horizontalLine(50);
 
     dealWithRegion(args);
+
+    System.out.println("Koniec...");
     Window.display();
   }
 }

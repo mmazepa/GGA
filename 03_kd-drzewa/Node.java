@@ -96,4 +96,18 @@ public class Node {
   public boolean isLeaf() {
     return this.left == null && this.right == null;
   }
+
+  public void print(int d) {
+    String prefix = "";
+    if (d == 0) prefix = "";
+    else while (prefix.length() < d*3) prefix = "┆  " + prefix;
+
+    if (!this.isLeaf()) {
+      System.out.println(prefix + this + ", (" + this.getType() + ") mediana: " + this.getLocation() + ", " + this.getRegion().toString());
+      if (this.getLeft() != null) this.getLeft().print(d+1);
+      if (this.getRight() != null) this.getRight().print(d+1);
+    } else {
+      System.out.println(prefix + this.getPoint().toString() + " (" + this.getType() + ")");
+    }
+  }
 }

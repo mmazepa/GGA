@@ -76,4 +76,48 @@ public class PointManager {
     });
     return pointsByY;
   }
+
+  public static void arrayDisplayer(String title, ArrayList<Point> array) {
+    System.out.println(title + ":");
+    displayPoints(array);
+  }
+
+  public static void displayLeftAndRight(int d, ArrayList<Point> left, ArrayList<Point> right) {
+    if (d%2 == 0) {
+      arrayDisplayer("d=" + d + "; LEFT LIST", left);
+      arrayDisplayer("d=" + d + "; RIGHT LIST", right);
+    } else {
+      arrayDisplayer("d=" + d + "; TOP LIST", left);
+      arrayDisplayer("d=" + d + "; BOTTOM LIST", right);
+    }
+  }
+
+  public static double medianByX(ArrayList<Point> points) {
+    double median = 0;
+    points = sortByX(points);
+    int half = points.size()/2;
+    if (points.size()%2 == 0)
+      median = (points.get(half).getX() + points.get(half-1).getX())/2;
+    else
+      median = points.get(half).getX();
+    return median;
+  }
+
+  public static double medianByY(ArrayList<Point> points) {
+    double median = 0;
+    points = sortByY(points);
+    int half = points.size()/2;
+    if (points.size()%2 == 0)
+      median = (points.get(half).getY() + points.get(half-1).getY())/2;
+    else
+      median = points.get(half).getY();
+    return median;
+  }
+
+  public static double getMedian(int axis, ArrayList<Point> points) {
+    double median = 0;
+    if (axis == 0) median = medianByX(points);
+    else median = medianByY(points);
+    return median;
+  }
 }
