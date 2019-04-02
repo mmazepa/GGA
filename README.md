@@ -39,16 +39,16 @@ w roku akademickim 2018/2019.
     <td>15.04.2019</td>
     <td>-</td>
   </tr>
-  <tr>
-    <td colspan="2"><b>SUMA:</b></td>
+  <tr align="right">
+    <td colspan="3"><b>SUMA:</b></td>
     <td>14/35 pkt</td>
   </tr>
-  <tr>
-    <td colspan="2"><b>PROCENT:</b></td>
+  <tr align="right">
+    <td colspan="3"><b>PROCENT:</b></td>
     <td>40%</td>
   </tr>
-  <tr>
-    <td colspan="2"><b>OCENA:</b></td>
+  <tr align="right">
+    <td colspan="3"><b>OCENA:</b></td>
     <td>2.0</td>
   </tr>
 </table>
