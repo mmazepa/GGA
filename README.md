@@ -30,12 +30,7 @@ w roku akademickim 2018/2019.
   </tr>
   <tr>
     <td>4</td>
-    <td>
-      MIOTŁA [1 z 3]:<br/>
-      a. otoczka<br/>
-      b. przecięcia<br/>
-      c. triangulacja<br/>
-    </td>
+    <td>Triangulacja welokąta monotonicznego</td>
     <td>15.04.2019</td>
     <td>-</td>
   </tr>
