@@ -61,6 +61,19 @@ public class Window extends JPanel {
     g.setColor(Color.BLACK);
   }
 
+  public static void drawPolygon(Graphics g, ArrayList<Point> points, Color fillColor, Color edgesColor) {
+    Polygon polygon = new Polygon();
+    for (Point point : points) {
+      polygon.addPoint(prepareX(point.getX())+6, prepareY(point.getY())-7);
+    }
+
+    g.setColor(fillColor);
+    g.fillPolygon(polygon);
+    g.setColor(edgesColor);
+    g.drawPolygon(polygon);
+    g.setColor(Color.BLACK);
+  }
+
   public static void drawPoint(Graphics g, Point p, Color color) {
     g.setColor(color);
     Point p_adjusted = preparePoint(p);
@@ -77,6 +90,16 @@ public class Window extends JPanel {
     }
   }
 
+  public static void drawAllEdges(Graphics g, ArrayList<Edge> edges, Color color) {
+    g.setColor(Color.RED);
+    for (Edge edge : edges) {
+      Point p1 = preparePoint(edge.getPoint1());
+      Point p2 = preparePoint(edge.getPoint2());
+      g.drawLine(toInt(p1.getX()+6), toInt(p1.getY()-7), toInt(p2.getX()+6), toInt(p2.getY()-7));
+    }
+    g.setColor(Color.BLACK);
+  }
+
   public void paintComponent(Graphics g) {
     Point min_border = new Point(-1.5, -1.5);
     Point max_border = new Point(11.0, 11.0);
@@ -86,7 +109,8 @@ public class Window extends JPanel {
     Point max_box = new Point(10.0, 10.0);
 
     String title = "Triangulacja wielokąta";
-    Point titlePoint = preparePoint(new Point(5.0, 10.0));
+    Point titlePoint = preparePoint(new Point(5.0, 10.1));
+    Point titleShadowPoint = preparePoint(new Point(5.05, 10.05));
 
     g.setFont(g.getFont().deriveFont(10.0f));
     fillBox(g, min_border, max_border, new Color(0, 150, 50));
@@ -94,9 +118,16 @@ public class Window extends JPanel {
     fillBox(g, min_box, max_box, Color.WHITE);
     drawBox(g, min_box, max_box, Color.BLACK);
 
-    g.setFont(g.getFont().deriveFont(20.0f));
-    g.drawString(title, toInt(titlePoint.getX()-110), toInt(titlePoint.getY()-15));
+    drawPolygon(g, App.points, Color.LIGHT_GRAY, Color.BLACK);
 
+    g.setFont(g.getFont().deriveFont(20.0f));
+    g.setColor(new Color(50, 100, 50));
+    g.drawString(title, toInt(titleShadowPoint.getX()-110), toInt(titleShadowPoint.getY()-15));
+    g.setColor(Color.WHITE);
+    g.drawString(title, toInt(titlePoint.getX()-110), toInt(titlePoint.getY()-15));
+    g.setColor(Color.BLACK);
+
+    drawAllEdges(g, App.edges, Color.RED);
     drawAllPoints(g, App.points, Color.BLACK);
   }
 

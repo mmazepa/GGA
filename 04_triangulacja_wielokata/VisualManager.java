@@ -6,12 +6,8 @@ public class VisualManager {
   }
 
   public static void displayFramed(String text) {
-    displayFramed(text, "");
-  }
-
-  public static void displayFramed(String text, String point) {
     System.out.println("╔" + frameIt("═", text.length()+2) + "╗");
-    System.out.println("║ " + text + " ║ " + point);
+    System.out.println("║ " + text + " ║ ");
     System.out.println("╚" + frameIt("═", text.length()+2) + "╝");
   }
 
