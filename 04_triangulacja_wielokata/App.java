@@ -28,6 +28,12 @@ public class App {
     System.exit(0);
   }
 
+  public static Point lowerAndUpper(Point point, boolean lower, boolean upper) {
+    point.setIsLower(lower);
+    point.setIsUpper(upper);
+    return point;
+  }
+
   public static void setLowerAndUpper(ArrayList<Point> points, Point left, Point right) {
     while (points.get(0) != left) Collections.rotate(points, 1);
 
@@ -47,15 +53,25 @@ public class App {
     // System.out.println("LOWER:  " + lower);
     // System.out.println("UPPER:  " + upper);
 
-    for (Point point : lower) {
-      point.setIsLower(true);
-      point.setIsUpper(false);
-    }
+    for (Point point : lower) point = lowerAndUpper(point, true, false);
+    for (Point point : upper) point = lowerAndUpper(point, false, true);
+  }
 
-    for (Point point : upper) {
-      point.setIsLower(false);
-      point.setIsUpper(true);
-    }
+  public static double getOrientation(Point p1, Point p2, Point p3) {
+    double orientation = (p2.getY() - p1.getY()) * (p3.getX() - p2.getX()) - (p2.getX() - p1.getX()) * (p3.getY() - p2.getY());
+    int o = 0;
+
+    System.out.print("    " + p1.toString() + ", " + p2.toString() + ", " + p3.toString());
+
+    if (orientation == 0) o = 0;
+    else if (orientation > 0) o = 1;
+    else if (orientation < 0) o = 2;
+
+    if (o == 0) System.out.print(" ---> WSPÓŁLINIOWE\n");
+    else if (o == 1) System.out.print(" ---> W PRAWO\n");
+    else if (o == 2) System.out.print(" ---> W LEWO\n");
+
+    return o;
   }
 
   public static void sweepTriangulation(ArrayList<Point> points) {
@@ -66,15 +82,14 @@ public class App {
     Point point = new Point();
 
     for (int i = 2; i < points.size(); i++) {
-      if (points.get(i).getIsLower() != stack.peek().getIsLower()
-      && points.get(i).getIsUpper() != stack.peek().getIsUpper()) {
-        Point tmpPoint = stack.pop();
-        Edge edge = em.prepareEdge(points.get(i), stack.pop());
-        edges.add(edge);
+      System.out.println("[" + i + "] " + points.get(i).toString());
+      if ((points.get(i).getIsLower() && stack.peek().getIsUpper())
+      || (points.get(i).getIsUpper() && stack.peek().getIsLower())) {
+        Point tmpPoint = new Point();
         while (!stack.empty()) {
-          Point tmpPoint2 = stack.pop();
+          tmpPoint = stack.pop();
           if (stack.empty()) break;
-          edge = em.prepareEdge(points.get(i), tmpPoint2);
+          Edge edge = em.prepareEdge(points.get(i), tmpPoint);
           edges.add(edge);
         }
         stack.push(tmpPoint);
@@ -83,14 +98,18 @@ public class App {
         Point tmpPoint3 = stack.pop();
         while (!stack.empty()) {
           tmpPoint3 = stack.pop();
-          Edge edge = em.prepareEdge(points.get(i), tmpPoint3);
-          edges.add(edge);
+          if (getOrientation(points.get(i), tmpPoint3, points.get(i-1)) == 2) {
+            Edge edge = em.prepareEdge(points.get(i), tmpPoint3);
+            edges.add(edge);
+          } else break;
         }
         stack.push(tmpPoint3);
         stack.push(points.get(i));
         point = tmpPoint3;
       }
     }
+
+    // System.out.println(stack.empty());
 
     stack.pop();
     while (!stack.empty()) {
@@ -99,6 +118,7 @@ public class App {
       Edge edge = em.prepareEdge(point, tmpPoint4);
       edges.add(edge);
     }
+
     // System.out.println(stack.empty());
     // vn -> 2 ... n-1
   }
