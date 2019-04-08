@@ -42,6 +42,10 @@ public class Window extends JPanel {
     return newPoint;
   }
 
+  public static void drawCustomString(Graphics g, String text, Point point, int x_shift, int y_shift) {
+    g.drawString(text, toInt(point.getX() + x_shift), toInt(point.getY() + y_shift));
+  }
+
   public static void drawBox(Graphics g, Point leftBottom, Point topRight, Color color) {
     Point p1 = preparePoint(new Point(leftBottom.getX(), leftBottom.getY()));
     Point p2 = preparePoint(new Point(topRight.getX(), leftBottom.getY()));
@@ -82,9 +86,9 @@ public class Window extends JPanel {
     g.setColor(color);
     Point p_adjusted = preparePoint(p);
     g.setFont(g.getFont().deriveFont(20.0f));
-    g.drawString(pointSign, toInt(p_adjusted.getX()), toInt(p_adjusted.getY()));
+    drawCustomString(g, pointSign, p_adjusted, 0, 0);
     g.setFont(g.getFont().deriveFont(10.0f));
-    g.drawString(p.toString(), toInt(p_adjusted.getX()-15), toInt(p_adjusted.getY()-15));
+    drawCustomString(g, p.toString(), p_adjusted, -15, -15);
     g.setColor(Color.BLACK);
   }
 
@@ -103,38 +107,50 @@ public class Window extends JPanel {
     }
     g.setColor(Color.BLACK);
   }
+
+  public Point calculateShadows(Point p, double x_shift, double y_shift) {
+    Point shadow = new Point(p.getX(), p.getY());
+    shadow.setX(shadow.getX() + x_shift);
+    shadow.setY(shadow.getY() + y_shift);
+    return shadow;
+  }
+
+  public void prepareMainBox(Graphics g) {
+    Point min_box = new Point(0.0, 0.0);
+    Point max_box = new Point(10.0, 10.0);
+    Point min_shadow = calculateShadows(min_box, 0.1, -0.1);
+    Point max_shadow = calculateShadows(max_box, 0.1, -0.1);
+
+    fillBox(g, min_shadow, max_shadow, mainColor.darker());
+    fillBox(g, min_box, max_box, Color.WHITE);
+    drawBox(g, min_box, max_box, Color.BLACK);
+  }
+
   public void paintComponent(Graphics g) {
     Point min_border = new Point(-1.5, -1.5);
     Point max_border = new Point(11.0, 11.0);
-    Point min_shadow = new Point(0.1, -0.1);
-    Point max_shadow = new Point(10.1, 9.9);
-    Point min_box = new Point(0.0, 0.0);
-    Point max_box = new Point(10.0, 10.0);
 
-    Point titlePoint = preparePoint(new Point(5.0, 10.1));
-    Point titleShadowPoint = preparePoint(new Point(5.05, 10.05));
+    Point titlePoint = preparePoint(new Point(5.0, 10));
+    Point titleShadowPoint = calculateShadows(titlePoint, 3, 2);
     Point authorPoint = preparePoint(new Point(10,0));
 
     g.setFont(g.getFont().deriveFont(10.0f));
     fillBox(g, min_border, max_border, mainColor);
-    fillBox(g, min_shadow, max_shadow, mainColor.darker());
-    fillBox(g, min_box, max_box, Color.WHITE);
-    drawBox(g, min_box, max_box, Color.BLACK);
+    prepareMainBox(g);
 
     drawPolygon(g, App.points, Color.LIGHT_GRAY, Color.BLACK);
 
     String framedTitle = VisualManager.fromLeftAndRight(title, 11);
     g.setFont(g.getFont().deriveFont(20.0f));
     g.setColor(mainColor.darker());
-    g.drawString(framedTitle, toInt(titleShadowPoint.getX()-245), toInt(titleShadowPoint.getY()-15));
+    drawCustomString(g, framedTitle, titleShadowPoint, -246, -20);
     g.setColor(Color.WHITE);
-    g.drawString(framedTitle, toInt(titlePoint.getX()-245), toInt(titlePoint.getY()-15));
+    drawCustomString(g, framedTitle, titlePoint, -246, -20);
     g.setColor(Color.BLACK);
 
     drawAllEdges(g, App.edges, Color.RED);
     drawAllPoints(g, App.points, Color.BLACK);
 
-    Font font = g.getFont().deriveFont(20.0f);
     g.setFont(g.getFont().deriveFont(Font.BOLD));
     g.drawString(author, toInt(authorPoint.getX()-135), toInt(authorPoint.getY()-15));
   }
