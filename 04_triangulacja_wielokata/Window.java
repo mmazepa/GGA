@@ -152,7 +152,8 @@ public class Window extends JPanel {
     drawAllPoints(g, App.points, Color.BLACK);
 
     g.setFont(g.getFont().deriveFont(Font.BOLD));
-    g.drawString(author, toInt(authorPoint.getX()-135), toInt(authorPoint.getY()-15));
+    // g.drawString(author, toInt(authorPoint.getX()-135), toInt(authorPoint.getY()-15));
+    drawCustomString(g, author, authorPoint, -135, -15);
   }
 
   public static void display() {
