@@ -3,8 +3,22 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class PointManager {
+  public static boolean differentOrdinata(ArrayList<Point> points) {
+    for (Point point1 : points) {
+      for (Point point2 : points) {
+        if (point1 != point2) {
+          if (point1.getX() == point2.getX()) return false;
+        }
+      }
+    }
+    return true;
+  }
+
   public static void checkPoints(ArrayList<Point> points) {
-    if (points.size() == 0) App.exitOnPurpose("Nie podano punktów.");
+    if (points.size() == 0)
+      App.exitOnPurpose("Nie podano punktów.");
+    if (!differentOrdinata(App.points))
+      App.exitOnPurpose("Odcięte wierzchołków powinny być różne!");
   }
 
   public static void displayHalfPoints(String sign, ArrayList<Point> points) {

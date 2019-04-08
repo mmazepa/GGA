@@ -24,7 +24,7 @@ public class App {
   }
 
   public static void exitOnPurpose(String purpose) {
-    System.out.println(purpose);
+    vm.log("exit", purpose);
     System.exit(0);
   }
 
@@ -57,21 +57,59 @@ public class App {
     for (Point point : upper) point = lowerAndUpper(point, false, true);
   }
 
+  public static void setPreviousAndNext(ArrayList<Point> points) {
+    for (int i = 0; i < points.size(); i++) {
+      // System.out.println("___[[[[ " + i + " ]]]]___");
+      if (i == 0) {
+        // System.out.println("i = 0");
+        points.get(0).setPrevious(points.get(points.size()-1));
+        points.get(0).setNext(points.get(1));
+      } else if (i > 0 && i < points.size()-1) {
+        // System.out.println("0 > i > points.size()-1");
+        points.get(i).setPrevious(points.get(i-1));
+        points.get(i).setNext(points.get(i+1));
+      } else if (i == points.size()-1) {
+        // System.out.println("i = points.size()-1");
+        points.get(points.size()-1).setPrevious(points.get(points.size()-2));
+        points.get(points.size()-1).setNext(points.get(0));
+      }
+    }
+  }
+
   public static double getOrientation(Point p1, Point p2, Point p3) {
+    System.out.print("    " + p1.toString() + ", " + p2.toString() + ", " + p3.toString());
+
     double orientation = (p2.getY() - p1.getY()) * (p3.getX() - p2.getX()) - (p2.getX() - p1.getX()) * (p3.getY() - p2.getY());
     int o = 0;
-
-    System.out.print("    " + p1.toString() + ", " + p2.toString() + ", " + p3.toString());
 
     if (orientation == 0) o = 0;
     else if (orientation > 0) o = 1;
     else if (orientation < 0) o = 2;
+
+    if ((p1.getIsLower() && p2.getIsUpper())
+    || (p1.getIsUpper() && p2.getIsLower())) {
+      if (o == 1) o = 2;
+      else if (o == 2) o = 1;
+    }
 
     if (o == 0) System.out.print(" ---> WSPÓŁLINIOWE\n");
     else if (o == 1) System.out.print(" ---> W PRAWO\n");
     else if (o == 2) System.out.print(" ---> W LEWO\n");
 
     return o;
+  }
+
+  public static boolean isEdgeConnectingWithNeighbour(Point p1, Point p2) {
+    if (p1.getPrevious() == p2) return true;
+    if (p1.getNext() == p2) return true;
+    return false;
+  }
+
+  public static boolean isEdgeValid(Point p1, Point p2) {
+    boolean cond1 = isEdgeConnectingWithNeighbour(p1, p2);
+    boolean cond2 = getOrientation(p1, p2, p2.getPrevious()) == 2;
+    // boolean cond3 = p1 != p2 && p1 != p2.getPrevious();
+    return !cond1 && cond2;// && cond3;
   }
 
   public static void sweepTriangulation(ArrayList<Point> points) {
@@ -90,37 +128,53 @@ public class App {
           tmpPoint = stack.pop();
           if (stack.empty()) break;
           Edge edge = em.prepareEdge(points.get(i), tmpPoint);
-          edges.add(edge);
+          if (!isEdgeConnectingWithNeighbour(points.get(i), tmpPoint)) {
+            edges.add(edge);
+            System.out.println("    Dokładam, bo na przeciwnym łańcuchu!");
+          }
         }
         stack.push(tmpPoint);
         stack.push(points.get(i));
       } else {
-        Point tmpPoint3 = stack.pop();
+        Point tmpPoint3 = new Point();
+        // Point tmpPoint3 = stack.pop();
         while (!stack.empty()) {
           tmpPoint3 = stack.pop();
-          if (getOrientation(points.get(i), tmpPoint3, points.get(i-1)) == 2) {
+          if (stack.empty()) break;
+          if (isEdgeValid(points.get(i), tmpPoint3)) {
+            System.out.println("    W środku: dokładam!");
             Edge edge = em.prepareEdge(points.get(i), tmpPoint3);
             edges.add(edge);
-          } else break;
+            System.out.println("    Dokładam, bo na tym samym łańcuchu!");
+          } else {
+            System.out.println("    Poza: nie dokładam!");
+            break;
+          }
         }
         stack.push(tmpPoint3);
         stack.push(points.get(i));
+        // point = tmpPoint3.getPrevious();
         point = tmpPoint3;
       }
     }
 
     // System.out.println(stack.empty());
 
+    vm.title("Poza for'em!");
+
     stack.pop();
     while (!stack.empty()) {
       Point tmpPoint4 = stack.pop();
       if (stack.empty()) break;
       Edge edge = em.prepareEdge(point, tmpPoint4);
-      edges.add(edge);
+      if (isEdgeValid(point, tmpPoint4)) {
+        edges.add(edge);
+        System.out.println("    Dokładam!");
+      } else {
+        System.out.println("    Nie dokładam!");
+      }
     }
-
     // System.out.println(stack.empty());
-    // vn -> 2 ... n-1
   }
 
   public static void main(String args[]) {
@@ -141,6 +195,14 @@ public class App {
     vm.title("TRIANGULACJA");
     if (points.size() > 3) {
       setLowerAndUpper(points, sortedByX.get(0), sortedByX.get(sortedByX.size()-1));
+      setPreviousAndNext(points);
+
+      // for (Point point : points) {
+      //   System.out.print(point.getPrevious() + ", ");
+      //   System.out.print(point + ", ");
+      //   System.out.print(point.getNext() + "\n");
+      // }
+
       sweepTriangulation(sortedByX);
     } else {
       System.out.println("  3 punkty lub mniej, triangulacja nie ma sensu...");

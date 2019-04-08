@@ -24,4 +24,19 @@ public class VisualManager {
     while (line.length() < amount) line += "─";
     System.out.println(line);
   }
+
+  public static String fromLeftAndRight(String text, int num) {
+    String left = "";
+    String right = "";
+    while (left.length() < num && right.length() < num) {
+      left += "─";
+      right += "─";
+    }
+    return left + " " + text + " " + right;
+  }
+
+  public static void log(String label, String text) {
+    String logString = "["+ label + "]: " + text;
+    displayFramed(logString);
+  }
 }

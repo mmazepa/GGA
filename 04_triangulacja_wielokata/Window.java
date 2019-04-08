@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Polygon;
@@ -17,6 +18,9 @@ import javax.swing.JPanel;
 public class Window extends JPanel {
   private static int size = 600;
   private static String pointSign = "•";
+  private static String title = "Triangulacja wielokąta";
+  private static String author = "Mariusz Mazepa © 2019";
+  Color mainColor = new Color(0, 100, 0);
 
   public static int toInt(double num) {
     int integer = (int) Math.round(num);
@@ -91,7 +95,7 @@ public class Window extends JPanel {
   }
 
   public static void drawAllEdges(Graphics g, ArrayList<Edge> edges, Color color) {
-    g.setColor(Color.RED);
+    g.setColor(color);
     for (Edge edge : edges) {
       Point p1 = preparePoint(edge.getPoint1());
       Point p2 = preparePoint(edge.getPoint2());
@@ -99,7 +103,6 @@ public class Window extends JPanel {
     }
     g.setColor(Color.BLACK);
   }
-
   public void paintComponent(Graphics g) {
     Point min_border = new Point(-1.5, -1.5);
     Point max_border = new Point(11.0, 11.0);
@@ -108,32 +111,37 @@ public class Window extends JPanel {
     Point min_box = new Point(0.0, 0.0);
     Point max_box = new Point(10.0, 10.0);
 
-    String title = "Triangulacja wielokąta";
     Point titlePoint = preparePoint(new Point(5.0, 10.1));
     Point titleShadowPoint = preparePoint(new Point(5.05, 10.05));
+    Point authorPoint = preparePoint(new Point(10,0));
 
     g.setFont(g.getFont().deriveFont(10.0f));
-    fillBox(g, min_border, max_border, new Color(0, 150, 50));
-    fillBox(g, min_shadow, max_shadow, new Color(0, 100, 50));
+    fillBox(g, min_border, max_border, mainColor);
+    fillBox(g, min_shadow, max_shadow, mainColor.darker());
     fillBox(g, min_box, max_box, Color.WHITE);
     drawBox(g, min_box, max_box, Color.BLACK);
 
     drawPolygon(g, App.points, Color.LIGHT_GRAY, Color.BLACK);
 
+    String framedTitle = VisualManager.fromLeftAndRight(title, 11);
     g.setFont(g.getFont().deriveFont(20.0f));
-    g.setColor(new Color(50, 100, 50));
-    g.drawString(title, toInt(titleShadowPoint.getX()-110), toInt(titleShadowPoint.getY()-15));
+    g.setColor(mainColor.darker());
+    g.drawString(framedTitle, toInt(titleShadowPoint.getX()-245), toInt(titleShadowPoint.getY()-15));
     g.setColor(Color.WHITE);
-    g.drawString(title, toInt(titlePoint.getX()-110), toInt(titlePoint.getY()-15));
+    g.drawString(framedTitle, toInt(titlePoint.getX()-245), toInt(titlePoint.getY()-15));
     g.setColor(Color.BLACK);
 
     drawAllEdges(g, App.edges, Color.RED);
     drawAllPoints(g, App.points, Color.BLACK);
+
+    Font font = g.getFont().deriveFont(20.0f);
+    g.setFont(g.getFont().deriveFont(Font.BOLD));
+    g.drawString(author, toInt(authorPoint.getX()-135), toInt(authorPoint.getY()-15));
   }
 
   public static void display() {
     JFrame frame = new JFrame();
-    frame.setTitle("Triangulacja wielokąta");
+    frame.setTitle(title);
     frame.setSize(size, size);
     frame.addWindowListener(new WindowAdapter() {
        public void windowClosing(WindowEvent e) {

@@ -3,6 +3,8 @@ public class Point {
   private double y;
   boolean isUpper;
   boolean isLower;
+  Point previous;
+  Point next;
 
   public Point() {}
 
@@ -37,6 +39,20 @@ public class Point {
   }
   public boolean getIsLower() {
     return isLower;
+  }
+
+  public void setPrevious(Point previous) {
+    this.previous = previous;
+  }
+  public Point getPrevious() {
+    return previous;
+  }
+
+  public void setNext(Point next) {
+    this.next = next;
+  }
+  public Point getNext() {
+    return next;
   }
 
   public String toString() {
