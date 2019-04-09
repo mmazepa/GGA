@@ -11,11 +11,11 @@ public class VisualManager {
     System.out.println("╚" + frameIt("═", text.length()+2) + "╝");
   }
 
-  public static void title(String text) {
+  public static void title(String text, int length) {
     System.out.println("╭" + frameIt("─", text.length()+2) + "╮");
     System.out.println("│ " + text + " │");
     String lastLine = "╰" + frameIt("─", text.length()+2) + "┴";
-    while (lastLine.length() < 50) lastLine += "─";
+    while (lastLine.length() < length) lastLine += "─";
     System.out.println(lastLine);
   }
 
