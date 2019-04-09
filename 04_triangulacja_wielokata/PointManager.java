@@ -3,6 +3,8 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class PointManager {
+  static VisualManager vm = new VisualManager();
+
   public static boolean differentOrdinata(ArrayList<Point> points) {
     for (Point point1 : points) {
       for (Point point2 : points) {
@@ -35,14 +37,9 @@ public class PointManager {
   }
 
   public static void displayPoints(ArrayList<Point> points) {
-    System.out.println("Number of points: " + points.size());
+    vm.title("Number of points: " + points.size(), App.horizontalLength);
     displayHalfPoints("X", points);
     displayHalfPoints("Y", points);
-  }
-
-  public static void arrayDisplayer(String title, ArrayList<Point> array) {
-    System.out.println(title + ":");
-    displayPoints(array);
   }
 
   public static ArrayList<Point> sortByX(ArrayList<Point> pointsByX) {

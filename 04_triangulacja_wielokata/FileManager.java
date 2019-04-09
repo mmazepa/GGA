@@ -23,7 +23,10 @@ public class FileManager {
       }
     } catch (Exception e) {
       // e.printStackTrace();
-      App.exitOnPurpose("Plik \"" + fileName + "\" nie został znaleziony.");
+      if (points.size() == 0)
+        App.exitOnPurpose("Plik \"" + fileName + "\" nie został znaleziony.");
+      else
+        App.exitOnPurpose("Wystąpił błąd, upewnij się, że wprowadziłeś punkty właściwie.");
       System.exit(0);
     }
     return points;

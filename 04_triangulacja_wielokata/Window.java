@@ -126,6 +126,20 @@ public class Window extends JPanel {
     drawBox(g, min_box, max_box, Color.BLACK);
   }
 
+  public void drawText(Graphics g, String text, Point p, Color color) {
+    g.setColor(color);
+    drawCustomString(g, text, p, -246, -20);
+    g.setColor(Color.BLACK);
+  }
+
+  public void drawTitleWithShadow(Graphics g, Point titlePoint, Point titleShadowPoint) {
+    String framedTitle = VisualManager.fromLeftAndRight(title, 11);
+    g.setFont(g.getFont().deriveFont(20.0f));
+
+    drawText(g, framedTitle, titleShadowPoint, mainColor.darker());
+    drawText(g, framedTitle, titlePoint, Color.WHITE);
+  }
+
   public void paintComponent(Graphics g) {
     Point min_border = new Point(-1.5, -1.5);
     Point max_border = new Point(11.0, 11.0);
@@ -139,19 +153,11 @@ public class Window extends JPanel {
     prepareMainBox(g);
 
     drawPolygon(g, App.points, Color.LIGHT_GRAY, Color.BLACK);
-
-    String framedTitle = VisualManager.fromLeftAndRight(title, 11);
-    g.setFont(g.getFont().deriveFont(20.0f));
-    g.setColor(mainColor.darker());
-    drawCustomString(g, framedTitle, titleShadowPoint, -246, -20);
-    g.setColor(Color.WHITE);
-    drawCustomString(g, framedTitle, titlePoint, -246, -20);
-    g.setColor(Color.BLACK);
-
     drawAllEdges(g, App.edges, Color.RED);
     drawAllPoints(g, App.points, Color.BLACK);
 
-    g.setFont(g.getFont().deriveFont(Font.BOLD));
+    drawTitleWithShadow(g, titlePoint, titleShadowPoint);
+    g.setFont(g.getFont().deriveFont(Font.BOLD, 10.0f));
     drawCustomString(g, author, authorPoint, -135, -15);
   }
 

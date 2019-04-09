@@ -40,10 +40,36 @@ public class App {
     point.setNext(next);
   }
 
+  public static void setLowerAndNeighbours(List<Point> lower, List<Point> upper) {
+    for (int i = 0; i < lower.size(); i++) {
+      setLowerAndUpper(lower.get(i), true, false);
+      if (i == 0) {
+        setLowerAndUpper(lower.get(i), false, false);
+        setPreviousAndNext(lower.get(0), null, lower.get(1));
+      } else if (i > 0 && i < lower.size()-1) {
+        setPreviousAndNext(lower.get(i), lower.get(i-1), lower.get(i+1));
+      } else if (i == lower.size()-1) {
+        setPreviousAndNext(lower.get(i), lower.get(i-1), upper.get(0));
+      }
+    }
+  }
+
+  public static void setUpperAndNeighbours(List<Point> lower, List<Point> upper) {
+    for (int i = 0; i < upper.size(); i++) {
+      setLowerAndUpper(upper.get(i), false, true);
+      if (i == 0) {
+        setLowerAndUpper(upper.get(i), false, false);
+        setPreviousAndNext(upper.get(0), upper.get(1), null);
+      } else if (i > 0 && i < upper.size()-1) {
+        setPreviousAndNext(upper.get(i), upper.get(i+1), upper.get(i-1));
+      } else if (i == upper.size()-1) {
+        setPreviousAndNext(upper.get(i), lower.get(0), upper.get(i-1));
+      }
+    }
+  }
+
   public static void setLowerUpperAndNeighbours(ArrayList<Point> points, Point left, Point right) {
     while (points.get(0) != left) Collections.rotate(points, 1);
-
-    // System.out.println("POINTS: " + points);
 
     int indexOfRight = 0;
     for (int i = 0; i < points.size(); i++) {
@@ -59,29 +85,8 @@ public class App {
     // System.out.println("LOWER:  " + lower);
     // System.out.println("UPPER:  " + upper);
 
-    for (int i = 0; i < lower.size(); i++) {
-      setLowerAndUpper(lower.get(i), true, false);
-      if (i == 0) {
-        setLowerAndUpper(lower.get(i), false, false);
-        setPreviousAndNext(lower.get(0), null, lower.get(1));
-      } else if (i > 0 && i < lower.size()-1) {
-        setPreviousAndNext(lower.get(i), lower.get(i-1), lower.get(i+1));
-      } else if (i == lower.size()-1) {
-        setPreviousAndNext(lower.get(i), lower.get(i-1), upper.get(0));
-      }
-    }
-
-    for (int i = 0; i < upper.size(); i++) {
-      setLowerAndUpper(upper.get(i), false, true);
-      if (i == 0) {
-        setLowerAndUpper(upper.get(i), false, false);
-        setPreviousAndNext(upper.get(0), upper.get(1), null);
-      } else if (i > 0 && i < upper.size()-1) {
-        setPreviousAndNext(upper.get(i), upper.get(i+1), upper.get(i-1));
-      } else if (i == upper.size()-1) {
-        setPreviousAndNext(upper.get(i), lower.get(0), upper.get(i-1));
-      }
-    }
+    setLowerAndNeighbours(lower, upper);
+    setUpperAndNeighbours(lower, upper);
 
     // for (Point point : points) System.out.println(point.toString() + ", " + point.getIsUpper() + ", " + point.getIsLower());
     // for (Point point : points) System.out.println(point.toString() + " -> " + point.getPrevious() + ", " + point.getNext());
@@ -124,11 +129,9 @@ public class App {
   }
 
   public static void printStack(Stack stack) {
-    String stackString = new String();
-    stackString += "STOS | ";
-    for (int i = 0; i < stack.size(); i++) {
+    String stackString = "STOS | ";
+    for (int i = 0; i < stack.size(); i++)
       stackString += stack.elementAt(i) + " ";
-    }
     vm.displayFramed(stackString);
   }
 
@@ -152,7 +155,7 @@ public class App {
           Edge edge = em.prepareEdge(points.get(i), tmpPoint);
           if (!isEdgeConnectingWithNeighbour(points.get(i), tmpPoint)) {
             edges.add(edge);
-            System.out.println("    Dokładam, bo na przeciwnym łańcuchu!");
+            System.out.println("    Dokładam (na przeciwnym łańcuchu)!");
           }
           tmpPoint = stack.pop();
         }
@@ -166,7 +169,7 @@ public class App {
             System.out.println("    W środku: dokładam!");
             Edge edge = em.prepareEdge(points.get(i), tmpPoint);
             edges.add(edge);
-            System.out.println("    Dokładam, bo na tym samym łańcuchu!");
+            System.out.println("    Dokładam (na tym samym łańcuchu)!");
           } else {
             System.out.println("    Poza: nie dokładam!");
             break;
@@ -191,12 +194,8 @@ public class App {
       point = stack.pop();
       if (stack.empty()) break;
       Edge edge = em.prepareEdge(vn, point);
-      //if (isEdgeValid(vn, point)) {
-        edges.add(edge);
-        System.out.println("    Dokładam!");
-      // } else {
-      //   System.out.println("    Nie dokładam!");
-      // }
+      edges.add(edge);
+      System.out.println("    Dokładam!");
       printStack(stack);
     }
     printStack(stack);
