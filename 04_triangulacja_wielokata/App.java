@@ -78,22 +78,16 @@ public class App {
         setPreviousAndNext(upper.get(0), upper.get(1), null);
       } else if (i > 0 && i < upper.size()-1) {
         setPreviousAndNext(upper.get(i), upper.get(i+1), upper.get(i-1));
-      } else if (i == lower.size()-1) {
-        setPreviousAndNext(lower.get(i), null, lower.get(i-1));
+      } else if (i == upper.size()-1) {
+        setPreviousAndNext(upper.get(i), lower.get(0), upper.get(i-1));
       }
     }
 
     // for (Point point : points) System.out.println(point.toString() + ", " + point.getIsUpper() + ", " + point.getIsLower());
+    // for (Point point : points) System.out.println(point.toString() + " -> " + point.getPrevious() + ", " + point.getNext());
   }
 
   public static double getOrientation(Point p1, Point p2, Point p3) {
-    if (p2.getIsUpper())
-      p3 = p2.getNext();
-    if (p2.getIsLower())
-      p3 = p2.getPrevious();
-    if (!p2.getIsUpper() && !p2.getIsLower())
-      return 0;
-
     System.out.print("    " + p1.toString() + ", " + p2.toString() + ", " + p3.toString());
 
     double orientation = (p2.getY() - p1.getY()) * (p3.getX() - p2.getX()) - (p2.getX() - p1.getX()) * (p3.getY() - p2.getY());
@@ -103,12 +97,6 @@ public class App {
     else if (orientation > 0) o = 1;
     else if (orientation < 0) o = 2;
 
-    // if ((p1.getIsLower() && p2.getIsUpper())
-    // || (p1.getIsUpper() && p2.getIsLower())) {
-    //   if (o == 1) o = 2;
-    //   else if (o == 2) o = 1;
-    // }
-
     if (o == 0) System.out.print(" ---> WSPÓŁLINIOWE\n");
     else if (o == 1) System.out.print(" ---> W PRAWO\n");
     else if (o == 2) System.out.print(" ---> W LEWO\n");
@@ -117,16 +105,22 @@ public class App {
   }
 
   public static boolean isEdgeConnectingWithNeighbour(Point p1, Point p2) {
-    // if (p1.getPrevious() == p2) return true;
-    // if (p1.getNext() == p2) return true;
+    if (p1.getPrevious() == p2) return true;
+    if (p1.getNext() == p2) return true;
     return false;
   }
 
   public static boolean isEdgeValid(Point p1, Point p2) {
+    Point p3 = new Point();
+
+    if (p2.getIsUpper() && !p2.getIsLower()) p3 = p2.getPrevious();
+    else if (p2.getIsLower() && !p2.getIsUpper()) p3 = p2.getNext();
+
     boolean cond1 = isEdgeConnectingWithNeighbour(p1, p2);
-    boolean cond2 = getOrientation(p1, p2, p2.getPrevious()) == 2;
-    // boolean cond3 = p1 != p2 && p1 != p2.getPrevious();
+    boolean cond2 = getOrientation(p1, p2, p3) == 2;
+    // boolean cond3 = p1 != p2 && p1 != p2.getPrevious() && p1 != p2.getNext();
     return !cond1 && cond2;// && cond3;
+
   }
 
   public static void printStack(Stack stack) {
@@ -175,7 +169,6 @@ public class App {
             System.out.println("    Dokładam, bo na tym samym łańcuchu!");
           } else {
             System.out.println("    Poza: nie dokładam!");
-            // stack.push(tmpPoint);
             break;
           }
           tmpPoint = stack.pop();
