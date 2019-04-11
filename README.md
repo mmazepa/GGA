@@ -34,13 +34,25 @@ w roku akademickim 2018/2019.
     <td>15.04.2019</td>
     <td>-</td>
   </tr>
+  <tr>
+    <td>5</td>
+    <td>APX. Algorytmy aproksymacyjne</td>
+    <td>29.04.2019</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>PTAS. Schematy aproksymacyjne</td>
+    <td>13.05.2019</td>
+    <td>-</td>
+  </tr>
   <tr align="right">
     <td colspan="3"><b>SUMA:</b></td>
-    <td>14/35 pkt</td>
+    <td>14/30 pkt</td>
   </tr>
   <tr align="right">
     <td colspan="3"><b>PROCENT:</b></td>
-    <td>40%</td>
+    <td>47%</td>
   </tr>
   <tr align="right">
     <td colspan="3"><b>OCENA:</b></td>
