@@ -29,6 +29,21 @@ public class PointManager {
     displayHalfPoints("Y", points);
   }
 
+  public static Point findMin(ArrayList<Point> points) {
+    Point minPoint = points.get(0);
+    for (int i = 1; i < points.size(); i++) {
+      if (minPoint.getY() < points.get(i).getY()) {
+        minPoint = minPoint;
+      } else if (minPoint.getY() == points.get(i).getY()
+      && minPoint.getX() < points.get(i).getX()) {
+        minPoint = minPoint;
+      } else {
+        minPoint = points.get(i);
+      }
+    }
+    return minPoint;
+  }
+
   public static ArrayList<Point> sortByX(ArrayList<Point> pointsByX) {
     Collections.sort(pointsByX, new Comparator<Point>() {
       @Override

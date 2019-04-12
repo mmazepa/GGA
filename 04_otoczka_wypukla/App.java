@@ -14,6 +14,8 @@ public class App {
 
   public static int horizontalLength = 60;
 
+  public static Point minPoint = new Point();
+
   public static void checkIfFileNameIsPassed(String[] args) {
     if (args.length > 0) {
       inputFileName = args[0];
@@ -64,7 +66,8 @@ public class App {
 
     vm.title("OTOCZKA WYPUKŁA - SKAN GRAHAMA", horizontalLength);
     if (points.size() >= 3) {
-      // ...
+      minPoint = pm.findMin(points);
+      System.out.println("MIN: " + minPoint);
     } else {
       System.out.println("  mniej niż 3 punkty, obliczenia nie mają sensu...");
     }
