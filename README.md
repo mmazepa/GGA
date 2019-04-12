@@ -30,7 +30,7 @@ w roku akademickim 2018/2019.
   </tr>
   <tr>
     <td>4</td>
-    <td>Triangulacja welokąta monotonicznego</td>
+    <td>Otoczka wypukła</td>
     <td>15.04.2019</td>
     <td>-</td>
   </tr>

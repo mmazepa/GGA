@@ -93,7 +93,7 @@ public class App {
   }
 
   public static double getOrientation(Point p1, Point p2, Point p3) {
-    System.out.print("    " + p1.toString() + ", " + p2.toString() + ", " + p3.toString());
+    // System.out.print("    " + p1.toString() + ", " + p2.toString() + ", " + p3.toString());
 
     double orientation = (p2.getY() - p1.getY()) * (p3.getX() - p2.getX()) - (p2.getX() - p1.getX()) * (p3.getY() - p2.getY());
     int o = 0;
@@ -102,30 +102,58 @@ public class App {
     else if (orientation > 0) o = 1;
     else if (orientation < 0) o = 2;
 
-    if (o == 0) System.out.print(" ---> WSPÓŁLINIOWE\n");
-    else if (o == 1) System.out.print(" ---> W PRAWO\n");
-    else if (o == 2) System.out.print(" ---> W LEWO\n");
+    // if (o == 0) System.out.print(" ---> WSPÓŁLINIOWE\n");
+    // else if (o == 1) System.out.print(" ---> W PRAWO\n");
+    // else if (o == 2) System.out.print(" ---> W LEWO\n");
 
     return o;
   }
 
   public static boolean isEdgeConnectingWithNeighbour(Point p1, Point p2) {
+    System.out.println("NEIGHBOUR: " + p1.getPrevious().toString() + ", [" + p1.toString() + "], " + p1.getNext().toString() + ", ---> " + p2.toString());
     if (p1.getPrevious() == p2) return true;
-    if (p1.getNext() == p2) return true;
+    // if (p1.getNext() == p2) return true;
     return false;
   }
 
-  public static boolean isEdgeValid(Point p1, Point p2) {
-    Point p3 = new Point();
+  // public static boolean isEdgeValid(Point p1, Point p2) {
+  //   Point p3 = new Point();
+  //
+  //   if (p2.getIsUpper() && !p2.getIsLower()) p3 = p2.getPrevious();
+  //   else if (p2.getIsLower() && !p2.getIsUpper()) p3 = p2.getNext();
+  //
+  //   boolean cond1 = isEdgeConnectingWithNeighbour(p1, p2);
+  //   // boolean cond2 = getOrientation(p1, p2, p3) == 2;
+  //   // boolean cond3 = p1 != p2 && p1 != p2.getPrevious() && p1 != p2.getNext();
+  //   return !cond1;
+  // }
 
-    if (p2.getIsUpper() && !p2.getIsLower()) p3 = p2.getPrevious();
-    else if (p2.getIsLower() && !p2.getIsUpper()) p3 = p2.getNext();
+  public static boolean protrudingVertex(Point point, Stack<Point> stack) {
+    Point p1 = point.getPrevious();
+    Point p2 = point.getNext();
+    Point tmpPoint = point;
+    double newX = (((point.getY() - p1.getY()) * (p2.getX() - p1.getX())) / (p2.getY() - p1.getY())) + p1.getX();
+    // newX = Math.abs(newX);
 
-    boolean cond1 = isEdgeConnectingWithNeighbour(p1, p2);
-    boolean cond2 = getOrientation(p1, p2, p3) == 2;
-    // boolean cond3 = p1 != p2 && p1 != p2.getPrevious() && p1 != p2.getNext();
-    return !cond1 && cond2;// && cond3;
+    // System.out.println("PROTRUDE: " + p1 + ", " + point + ", " + p2);
 
+    Edge edge = new Edge();
+    if ((point.getIsUpper() && !point.getIsLower() && newX < point.getX() && getOrientation(p1, point, p2) == 1)
+    || (point.getIsLower() && !point.getIsUpper() && newX > point.getX() && getOrientation(p1, point, p2) == 2)) {
+      // System.out.println("Wewnątrz: dokładam!");
+      edge = new Edge(p1, p2);
+      edges.add(edge);
+      // tmpPoint = stack.pop();
+      // stack.push(point.getPrevious());
+      printStack(stack);
+      return true;
+    } else {
+      // System.out.println("Na zewnątrz: nie dokładam!");
+      return false;
+    }
+
+    // return tmpPoint;
+    // return stack.pop();
   }
 
   public static void printStack(Stack stack) {
@@ -145,18 +173,18 @@ public class App {
 
     for (int i = 2; i < points.size()-1; i++) {
       printStack(stack);
-      System.out.println("V[" + i + "] = " + points.get(i).toString());
+      System.out.println("V[" + i + "] = " + points.get(i).toString() + " ... " + tmpPoint);
 
       if ((points.get(i).getIsLower() && stack.peek().getIsUpper())
       || (points.get(i).getIsUpper() && stack.peek().getIsLower())) {
         point = stack.pop();
         tmpPoint = point;
         while (!stack.empty()) {
-          Edge edge = em.prepareEdge(points.get(i), tmpPoint);
-          if (!isEdgeConnectingWithNeighbour(points.get(i), tmpPoint)) {
+          // if (!isEdgeConnectingWithNeighbour(points.get(i), tmpPoint)) {
+            Edge edge = em.prepareEdge(points.get(i), tmpPoint);
             edges.add(edge);
-            System.out.println("    Dokładam (na przeciwnym łańcuchu)!");
-          }
+            // System.out.println("    Dokładam (na przeciwnym łańcuchu)!");
+          // }
           tmpPoint = stack.pop();
         }
         stack.push(point);
@@ -165,15 +193,16 @@ public class App {
         point = stack.pop();
         tmpPoint = point;
         while (!stack.empty()) {
-          if (isEdgeValid(points.get(i), tmpPoint)) {
-            System.out.println("    W środku: dokładam!");
-            Edge edge = em.prepareEdge(points.get(i), tmpPoint);
-            edges.add(edge);
-            System.out.println("    Dokładam (na tym samym łańcuchu)!");
-          } else {
-            System.out.println("    Poza: nie dokładam!");
-            break;
-          }
+          if (!protrudingVertex(tmpPoint, stack)) break;
+          // if (!isEdgeConnectingWithNeighbour(points.get(i), tmpPoint)) {
+          //   System.out.println("    W środku: dokładam!");
+          //   Edge edge = em.prepareEdge(points.get(i).getPrevious(), points.get(i).getNext());
+          //   edges.add(edge);
+          //   System.out.println("    Dokładam (na tym samym łańcuchu)!");
+          // } else {
+          //   System.out.println("    Poza: nie dokładam!");
+          //   break;
+          // }
           tmpPoint = stack.pop();
         }
         stack.push(point);
