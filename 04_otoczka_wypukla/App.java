@@ -3,6 +3,7 @@ import java.util.Stack;
 
 public class App {
   public static ArrayList<Point> points = new ArrayList<Point>();
+  public static ArrayList<Point> pointsCopy = new ArrayList<Point>();
   public static String inputFileName = new String();
 
   public static FileManager fm = new FileManager();
@@ -52,19 +53,19 @@ public class App {
   }
 
   public static double alphaValue(Point point, Point minPoint) {
-    minPoint = new Point(0,0);
-    // Point point = new Point(p.getX()-minPoint.getX(), p.getY()-minPoint.getY());
-
-    if (point.getX() >= minPoint.getX() && point.getY() >= minPoint.getY())
-      return point.getY()/point.getD();
-    else if (point.getX() < minPoint.getX() && point.getY() >= minPoint.getY())
-      return 2-(point.getY()/point.getD());
-    else if (point.getX() < minPoint.getX() && point.getY() < minPoint.getY())
-      return 2+(Math.abs(point.getY())/point.getD());
-    else if (point.getX() >= minPoint.getX() && point.getY() < minPoint.getY())
-      return 4-(Math.abs(point.getY())/point.getD());
-    else return 0.0;
+    return Math.atan2(point.getY()-minPoint.getY(), point.getX()-minPoint.getX());
   }
+
+ public static ArrayList<Point> removePointsWithSameAlpha(ArrayList<Point> points) {
+   for (int i = points.size()-1; i > 1; i--) {
+     if (points.get(i).getAlpha() == points.get(i-1).getAlpha()) {
+       System.out.println("   Usuwam: " + points.get(i-1));
+       points.remove(points.get(i-1));
+       i--;
+     }
+   }
+   return points;
+ }
 
   public static void main(String args[]) {
     checkIfFileNameIsPassed(args);
@@ -72,8 +73,8 @@ public class App {
     points = fm.loadPoints(inputFileName);
     pm.checkPoints(points);
 
-    vm.horizontalLine(horizontalLength);
-    pm.displayPoints(points);
+    // vm.horizontalLine(horizontalLength);
+    // pm.displayPoints(points);
 
     vm.horizontalLine(horizontalLength);
 
@@ -84,20 +85,28 @@ public class App {
       vm.horizontalLine(horizontalLength);
 
       for (Point point : points) {
-        point.setD(Math.abs(point.getX()) + Math.abs(point.getY()));
+        // point.setD(Math.abs(point.getX()) + Math.abs(point.getY()));
         point.setAlpha(alphaValue(point, minPoint));
       }
-      minPoint.setAlpha(0.0);
 
       points = pm.sortByAlpha(points);
       pm.displayPoints(points);
+
+      vm.horizontalLine(horizontalLength);
+
+      pointsCopy.addAll(points);
+      points = removePointsWithSameAlpha(points);
+
+      vm.horizontalLine(horizontalLength);
 
       stack.push(points.get(0));
       stack.push(points.get(1));
       stack.push(points.get(2));
 
+      printStack(stack);
+
       for (int i = 3; i < points.size(); i++) {
-        while (stack.size() > 1 && getOrientation(stack.elementAt(stack.size()-2), stack.elementAt(stack.size()-1), points.get(i)) != 2) {
+        while (getOrientation(stack.elementAt(stack.size()-2), stack.elementAt(stack.size()-1), points.get(i)) != 2) {
           System.out.println("____STACK POP:  " + stack.peek());
           stack.pop();
           printStack(stack);

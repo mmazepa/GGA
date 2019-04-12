@@ -156,7 +156,7 @@ public class Window extends JPanel {
     prepareMainBox(g);
 
     drawPolygon(g, App.stack, Color.LIGHT_GRAY, stackPointsColor);
-    drawAllPoints(g, App.points, Color.BLACK);
+    drawAllPoints(g, App.pointsCopy, Color.BLACK);
     drawStackPoints(g, App.stack, stackPointsColor);
 
     drawTitleWithShadow(g, titlePoint, titleShadowPoint);

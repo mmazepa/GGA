@@ -10,30 +10,11 @@ public class PointManager {
       App.exitOnPurpose("Nie podano punktów.");
   }
 
-  public static void displayHalfPoints(String sign, ArrayList<Point> points) {
-    System.out.print("   " + sign + ": ");
-    for (Point point : points) {
-      double value = 0;
-      if (sign.equals("X")) value = point.getX();
-      else if (sign.equals("Y")) value = point.getY();
-      else if (sign.equals("D")) value = point.getD();
-      else if (sign.equals("A")) value = point.getAlpha();
-
-      if (value < 10) System.out.print(" ");
-      if ((sign.equals("D") || sign.equals("A")) && value == 0.0)
-        System.out.print("  - ");
-      else
-        System.out.print(value + " ");
-    }
-    System.out.print("\n");
-  }
-
   public static void displayPoints(ArrayList<Point> points) {
     vm.title("Number of points: " + points.size(), App.horizontalLength);
-    displayHalfPoints("X", points);
-    displayHalfPoints("Y", points);
-    displayHalfPoints("D", points);
-    displayHalfPoints("A", points);
+    for (Point point : points) {
+      System.out.println("   " + point + ", " + point.getAlpha());
+    }
   }
 
   public static Point findMin(ArrayList<Point> points) {
