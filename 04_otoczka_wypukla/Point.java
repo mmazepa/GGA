@@ -1,6 +1,8 @@
 public class Point {
   private double x;
   private double y;
+  private double d;
+  private double alpha;
 
   public Point() {}
 
@@ -21,6 +23,20 @@ public class Point {
   }
   public double getY() {
     return y;
+  }
+
+  public void setD(double d) {
+    this.d = d;
+  }
+  public double getD() {
+    return d;
+  }
+
+  public void setAlpha(double alpha) {
+    this.alpha = alpha;
+  }
+  public double getAlpha() {
+    return alpha;
   }
 
   public String toString() {

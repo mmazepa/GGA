@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Stack;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -20,7 +21,8 @@ public class Window extends JPanel {
   private static String pointSign = "•";
   private static String title = "Otoczka Wypukła";
   private static String author = "Mariusz Mazepa © 2019";
-  Color mainColor = new Color(0, 100, 0);
+  private static Color mainColor = new Color(0, 100, 0);
+  private static Color stackPointsColor = Color.RED;
 
   public static int toInt(double num) {
     int integer = (int) Math.round(num);
@@ -69,9 +71,12 @@ public class Window extends JPanel {
     g.setColor(Color.BLACK);
   }
 
-  public static void drawPolygon(Graphics g, ArrayList<Point> points, Color fillColor, Color edgesColor) {
+  public static void drawPolygon(Graphics g, Stack<Point> s, Color fillColor, Color edgesColor) {
     Polygon polygon = new Polygon();
-    for (Point point : points) {
+    Stack<Point> stack = new Stack<Point>();
+    stack.addAll(s);
+    while (!stack.empty()) {
+      Point point = stack.pop();
       polygon.addPoint(prepareX(point.getX())+6, prepareY(point.getY())-7);
     }
 
@@ -95,6 +100,14 @@ public class Window extends JPanel {
   public static void drawAllPoints(Graphics g, ArrayList<Point> points, Color color) {
     for (int i = 0; i < points.size(); i++) {
       drawPoint(g, points.get(i), color);
+    }
+  }
+
+  public static void drawStackPoints(Graphics g, Stack<Point> s, Color color) {
+    Stack<Point> stack = new Stack<Point>();
+    stack.addAll(s);
+    while (!stack.empty()) {
+      drawPoint(g, stack.pop(), color);
     }
   }
 
@@ -142,8 +155,9 @@ public class Window extends JPanel {
     fillBox(g, min_border, max_border, mainColor);
     prepareMainBox(g);
 
-    // drawPolygon(g, App.points, Color.LIGHT_GRAY, Color.BLACK);
+    drawPolygon(g, App.stack, Color.LIGHT_GRAY, stackPointsColor);
     drawAllPoints(g, App.points, Color.BLACK);
+    drawStackPoints(g, App.stack, stackPointsColor);
 
     drawTitleWithShadow(g, titlePoint, titleShadowPoint);
     g.setFont(g.getFont().deriveFont(Font.BOLD, 10.0f));

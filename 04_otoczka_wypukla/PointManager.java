@@ -16,9 +16,14 @@ public class PointManager {
       double value = 0;
       if (sign.equals("X")) value = point.getX();
       else if (sign.equals("Y")) value = point.getY();
+      else if (sign.equals("D")) value = point.getD();
+      else if (sign.equals("A")) value = point.getAlpha();
 
       if (value < 10) System.out.print(" ");
-      System.out.print(value + " ");
+      if ((sign.equals("D") || sign.equals("A")) && value == 0.0)
+        System.out.print("  - ");
+      else
+        System.out.print(value + " ");
     }
     System.out.print("\n");
   }
@@ -27,6 +32,8 @@ public class PointManager {
     vm.title("Number of points: " + points.size(), App.horizontalLength);
     displayHalfPoints("X", points);
     displayHalfPoints("Y", points);
+    displayHalfPoints("D", points);
+    displayHalfPoints("A", points);
   }
 
   public static Point findMin(ArrayList<Point> points) {
@@ -44,33 +51,18 @@ public class PointManager {
     return minPoint;
   }
 
-  public static ArrayList<Point> sortByX(ArrayList<Point> pointsByX) {
-    Collections.sort(pointsByX, new Comparator<Point>() {
+  public static ArrayList<Point> sortByAlpha(ArrayList<Point> pointsByAlpha) {
+    Collections.sort(pointsByAlpha, new Comparator<Point>() {
       @Override
       public int compare(Point p1, Point p2) {
-        if ((p1.getX() < p2.getX()) || (p1.getX() == p2.getX() && p1.getY() < p2.getY()))
+        if (p1.getAlpha() < p2.getAlpha() || (p1.getAlpha() == p2.getAlpha() && p1.getX() < p2.getX()))
           return -1;
-        else if (p1.getX() > p2.getX())
+        else if (p1.getAlpha() > p2.getAlpha())
           return 1;
         else
           return 0;
       }
     });
-    return pointsByX;
-  }
-
-  public static ArrayList<Point> sortByY(ArrayList<Point> pointsByY) {
-    Collections.sort(pointsByY, new Comparator<Point>() {
-      @Override
-      public int compare(Point p1, Point p2) {
-        if ((p1.getY() < p2.getY()) || (p1.getY() == p2.getY() && p1.getX() < p2.getX()))
-          return -1;
-        else if (p1.getY() > p2.getY())
-          return 1;
-        else
-          return 0;
-      }
-    });
-    return pointsByY;
+    return pointsByAlpha;
   }
 }
