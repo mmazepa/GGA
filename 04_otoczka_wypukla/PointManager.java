@@ -17,6 +17,10 @@ public class PointManager {
     }
   }
 
+  public static double getDistance(Point p1, Point p2) {
+    return Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(), 2));
+  }
+
   public static Point findMin(ArrayList<Point> points) {
     Point minPoint = points.get(0);
     for (int i = 1; i < points.size(); i++) {

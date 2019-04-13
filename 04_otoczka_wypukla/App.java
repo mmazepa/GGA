@@ -45,13 +45,6 @@ public class App {
     return o;
   }
 
-  public static void printStack(Stack stack) {
-    String stackString = "STOS | ";
-    for (int i = 0; i < stack.size(); i++)
-      stackString += stack.elementAt(i) + " ";
-    vm.displayFramed(stackString);
-  }
-
   public static double alphaValue(Point point, Point minPoint) {
     return Math.atan2(point.getY()-minPoint.getY(), point.getX()-minPoint.getX());
   }
@@ -59,9 +52,15 @@ public class App {
  public static ArrayList<Point> removePointsWithSameAlpha(ArrayList<Point> points) {
    for (int i = points.size()-1; i > 1; i--) {
      if (points.get(i).getAlpha() == points.get(i-1).getAlpha()) {
-       System.out.println("   Usuwam: " + points.get(i-1));
-       points.remove(points.get(i-1));
-       i--;
+       double dist1 = pm.getDistance(points.get(0), points.get(i));
+       double dist2 = pm.getDistance(points.get(0), points.get(i-1));
+       if (dist1 > dist2) {
+         System.out.println("   Usuwam: " + points.get(i-1));
+         points.remove(points.get(i-1));
+       } else {
+         System.out.println("   Usuwam: " + points.get(i));
+         points.remove(points.get(i));
+       }
      }
    }
    return points;
@@ -73,52 +72,55 @@ public class App {
     points = fm.loadPoints(inputFileName);
     pm.checkPoints(points);
 
-    // vm.horizontalLine(horizontalLength);
-    // pm.displayPoints(points);
-
     vm.horizontalLine(horizontalLength);
 
     vm.title("OTOCZKA WYPUKŁA - SKAN GRAHAMA", horizontalLength);
-    if (points.size() >= 3) {
-      minPoint = pm.findMin(points);
-      System.out.println("   MIN: " + minPoint);
-      vm.horizontalLine(horizontalLength);
 
-      for (Point point : points) {
-        // point.setD(Math.abs(point.getX()) + Math.abs(point.getY()));
-        point.setAlpha(alphaValue(point, minPoint));
-      }
+    minPoint = pm.findMin(points);
+    System.out.println("   MIN: " + minPoint);
+    vm.horizontalLine(horizontalLength);
 
-      points = pm.sortByAlpha(points);
-      pm.displayPoints(points);
-
-      vm.horizontalLine(horizontalLength);
-
-      pointsCopy.addAll(points);
-      points = removePointsWithSameAlpha(points);
-
-      vm.horizontalLine(horizontalLength);
-
-      stack.push(points.get(0));
-      stack.push(points.get(1));
-      stack.push(points.get(2));
-
-      printStack(stack);
-
-      for (int i = 3; i < points.size(); i++) {
-        while (getOrientation(stack.elementAt(stack.size()-2), stack.elementAt(stack.size()-1), points.get(i)) != 2) {
-          System.out.println("____STACK POP:  " + stack.peek());
-          stack.pop();
-          printStack(stack);
-        }
-        System.out.println("____STACK PUSH: " + points.get(i));
-        stack.push(points.get(i));
-        printStack(stack);
-      }
-    } else {
-      System.out.println("  mniej niż 3 punkty, obliczenia nie mają sensu...");
+    for (Point point : points) {
+      point.setAlpha(alphaValue(point, minPoint));
     }
 
+    points = pm.sortByAlpha(points);
+    pm.displayPoints(points);
+    vm.horizontalLine(horizontalLength);
+
+    pointsCopy.addAll(points);
+    points = removePointsWithSameAlpha(points);
+    vm.horizontalLine(horizontalLength);
+
+    if (points.size() >= 3) {
+      System.out.println("    STACK PUSH: " + points.get(0));
+      stack.push(points.get(0));
+      System.out.println("    STACK PUSH: " + points.get(1));
+      stack.push(points.get(1));
+      System.out.println("    STACK PUSH: " + points.get(2));
+      stack.push(points.get(2));
+
+      vm.printStack(stack, "STOS");
+
+      for (int i = 3; i < points.size(); i++) {
+        System.out.println("[" + i + "]: " + points.get(i));
+        while (stack.size() > 1 && getOrientation(stack.elementAt(stack.size()-2), stack.elementAt(stack.size()-1), points.get(i)) != 2) {
+          System.out.println("    STACK POP:  " + stack.peek());
+          stack.pop();
+          vm.printStack(stack, "STOS");
+        }
+        System.out.println("    STACK PUSH: " + points.get(i));
+        stack.push(points.get(i));
+        vm.printStack(stack, "STOS");
+      }
+    } else {
+      stack.addAll(points);
+      vm.printStack(stack, "STOS");
+    }
+
+    vm.horizontalLine(horizontalLength);
+    vm.title("EFEKT KOŃCOWY", horizontalLength);
+    vm.printStack(stack, "OTOCZKA");
     vm.horizontalLine(horizontalLength);
     Window.display();
   }
