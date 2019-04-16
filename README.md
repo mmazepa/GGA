@@ -32,7 +32,7 @@ w roku akademickim 2018/2019.
     <td>4</td>
     <td>Otoczka wypukła</td>
     <td>15.04.2019</td>
-    <td>-</td>
+    <td>3 pkt</td>
   </tr>
   <tr>
     <td>5</td>
@@ -48,14 +48,14 @@ w roku akademickim 2018/2019.
   </tr>
   <tr align="right">
     <td colspan="3"><b>SUMA:</b></td>
-    <td>14/30 pkt</td>
+    <td>17/30 pkt</td>
   </tr>
   <tr align="right">
     <td colspan="3"><b>PROCENT:</b></td>
-    <td>47%</td>
+    <td>57%</td>
   </tr>
   <tr align="right">
     <td colspan="3"><b>OCENA:</b></td>
-    <td>2.0</td>
+    <td>3.0</td>
   </tr>
 </table>
