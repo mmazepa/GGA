@@ -36,7 +36,7 @@ w roku akademickim 2018/2019.
   </tr>
   <tr>
     <td>5</td>
-    <td>APX. Algorytmy aproksymacyjne</td>
+    <td>Prostokątna gałąź Steinera</td>
     <td>29.04.2019</td>
     <td>-</td>
   </tr>
