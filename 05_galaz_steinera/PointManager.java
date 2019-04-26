@@ -29,28 +29,17 @@ public class PointManager {
     displayHalfPoints("Y", points);
   }
 
-  public static ArrayList<Point> sortByX(ArrayList<Point> pointsByX) {
-    Collections.sort(pointsByX, new Comparator<Point>() {
-      @Override
-      public int compare(Point p1, Point p2) {
-        if ((p1.getX() < p2.getX()) || (p1.getX() == p2.getX() && p1.getY() < p2.getY()))
-          return -1;
-        else if (p1.getX() > p2.getX())
-          return 1;
-        else
-          return 0;
-      }
-    });
-    return pointsByX;
+  public static double sumXY(Point point) {
+    return point.getX() + point.getY();
   }
 
-  public static ArrayList<Point> sortByY(ArrayList<Point> pointsByY) {
+  public static ArrayList<Point> sortPoints(ArrayList<Point> pointsByY) {
     Collections.sort(pointsByY, new Comparator<Point>() {
       @Override
       public int compare(Point p1, Point p2) {
-        if ((p1.getY() < p2.getY()) || (p1.getY() == p2.getY() && p1.getX() < p2.getX()))
+        if (sumXY(p1) > sumXY(p2) || (sumXY(p1) == sumXY(p2) && p1.getX() < p2.getX()))
           return -1;
-        else if (p1.getY() > p2.getY())
+        else if (sumXY(p1) < sumXY(p2))
           return 1;
         else
           return 0;

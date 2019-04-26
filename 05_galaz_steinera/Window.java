@@ -8,6 +8,10 @@ import java.awt.Polygon;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.awt.BasicStroke;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -81,6 +85,37 @@ public class Window extends JPanel {
     }
   }
 
+  public static void drawAllHelpLines(Graphics g, ArrayList<Point> points, Color color) {
+    Graphics2D g2d = (Graphics2D) g.create();
+    Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+    g2d.setColor(color);
+    g2d.setStroke(dashed);
+
+    for (Point point : points) {
+      double b = point.getY() + point.getX();
+
+      double x = -0 + b;
+      double y = -x + b;
+      double x2 = -10 + b;
+      double y2 = -x2 + b;
+
+      while (x > 10) {
+        x--;
+        y++;
+      }
+
+      while (x2 < 0) {
+        x2++;
+        y2--;
+      }
+
+      Point p1 = preparePoint(new Point(x, y));
+      Point p2 = preparePoint(new Point(x2, y2));
+      g2d.drawLine(toInt(p1.getX()+6), toInt(p1.getY()-7), toInt(p2.getX()+6), toInt(p2.getY()-7));
+    }
+    g2d.dispose();
+  }
+
   public static void drawAllEdges(Graphics g, ArrayList<Edge> edges, Color color) {
     g.setColor(color);
     for (Edge edge : edges) {
@@ -106,6 +141,7 @@ public class Window extends JPanel {
 
     fillBox(g, min_shadow, max_shadow, mainColor.darker());
     fillBox(g, min_box, max_box, Color.WHITE);
+    drawAllHelpLines(g, App.points, Color.LIGHT_GRAY);
     drawBox(g, min_box, max_box, Color.BLACK);
   }
 

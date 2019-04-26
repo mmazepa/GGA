@@ -34,6 +34,8 @@ public class App {
 
     points = fm.loadPoints(inputFileName);
     pm.checkPoints(points);
+
+    pm.sortPoints(points);
     pm.displayPoints(points);
     vm.horizontalLine(horizontalLength);
 
