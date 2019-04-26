@@ -141,7 +141,7 @@ public class Window extends JPanel {
 
     fillBox(g, min_shadow, max_shadow, mainColor.darker());
     fillBox(g, min_box, max_box, Color.WHITE);
-    drawAllHelpLines(g, App.points, Color.LIGHT_GRAY);
+    drawAllHelpLines(g, App.pointsCopy, Color.LIGHT_GRAY);
     drawBox(g, min_box, max_box, Color.BLACK);
   }
 
@@ -171,8 +171,9 @@ public class Window extends JPanel {
     fillBox(g, min_border, max_border, mainColor);
     prepareMainBox(g);
 
-    // drawAllEdges(g, App.edges, Color.RED);
-    drawAllPoints(g, App.points, Color.BLACK);
+    drawAllPoints(g, App.newPoints, Color.LIGHT_GRAY);
+    drawAllEdges(g, App.edges, Color.RED);
+    drawAllPoints(g, App.pointsCopy, Color.BLACK);
 
     drawTitleWithShadow(g, titlePoint, titleShadowPoint);
     g.setFont(g.getFont().deriveFont(Font.BOLD, 10.0f));

@@ -33,6 +33,12 @@ public class PointManager {
     return point.getX() + point.getY();
   }
 
+  public boolean equals(Point p1, Point p2) {
+    if (p1.getX() != p2.getX()) return false;
+    if (p1.getY() != p2.getY()) return false;
+    return true;
+  }
+
   public static ArrayList<Point> sortPoints(ArrayList<Point> pointsByY) {
     Collections.sort(pointsByY, new Comparator<Point>() {
       @Override

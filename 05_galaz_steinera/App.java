@@ -6,6 +6,8 @@ import java.awt.Polygon;
 
 public class App {
   public static ArrayList<Point> points = new ArrayList<Point>();
+  public static ArrayList<Point> pointsCopy = new ArrayList<Point>();
+  public static ArrayList<Point> newPoints = new ArrayList<Point>();
   public static ArrayList<Edge> edges = new ArrayList<Edge>();
   public static String inputFileName = new String();
 
@@ -36,10 +38,45 @@ public class App {
     pm.checkPoints(points);
 
     pm.sortPoints(points);
+    pointsCopy.addAll(points);
+
     pm.displayPoints(points);
     vm.horizontalLine(horizontalLength);
 
     vm.title("PROSTOKĄTNA GAŁĄŹ STEINERA", horizontalLength);
+
+    for (int i = 0; i < points.size()-1; i++) {
+      Point newPoint = new Point();
+      Point p1 = points.get(i);
+      Point p2 = points.get(i+1);
+
+      System.out.println(p1 + ", " + p2 + " ---> " + (pm.sumXY(p1)>pm.sumXY(p2)));
+
+      newPoint = new Point(Math.min(p1.getX(), p2.getX()), Math.min(p1.getY(), p2.getY()));
+
+      if (pm.equals(p2, points.get(points.size()-1)))
+        newPoint = new Point(Math.max(p1.getX(), p2.getX()), Math.min(p1.getY(), p2.getY()));
+      else
+        newPoint = new Point(Math.min(p1.getX(), p2.getX()), Math.min(p1.getY(), p2.getY()));
+
+      if (!pm.equals(newPoint, p1) && !pm.equals(newPoint, p2)) {
+        newPoints.add(newPoint);
+        points.add(newPoint);
+        pm.sortPoints(points);
+      }
+
+      if (!pm.equals(newPoint, p1)) {
+        edges.add(em.prepareEdge(newPoint, p1));
+        continue;
+      }
+
+      if (!pm.equals(newPoint, p2)) {
+        edges.add(em.prepareEdge(newPoint, p2));
+        continue;
+      }
+    }
+
+    for (Edge edge: edges) System.out.println("   " + edge);
 
     vm.horizontalLine(horizontalLength);
     Window.display();
