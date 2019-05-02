@@ -11,6 +11,9 @@ public class App {
   public static ArrayList<Edge> edges = new ArrayList<Edge>();
   public static String inputFileName = new String();
 
+  // public static ArrayList<Point> Q = new ArrayList<Point>();
+  // public static ArrayList<Point> G = new ArrayList<Point>();
+
   public static FileManager fm = new FileManager();
   public static PointManager pm = new PointManager();
   public static EdgeManager em = new EdgeManager();
@@ -44,6 +47,30 @@ public class App {
     vm.horizontalLine(horizontalLength);
 
     vm.title("PROSTOKĄTNA GAŁĄŹ STEINERA", horizontalLength);
+
+    // Q.addAll(points);
+    // G.addAll(points);
+    //
+    // while (Q.size() > 1) {
+    //   // newPoints.clear();
+    //   for (int i = 0; i < Q.size()-1; i++) {
+    //     //if (Q.get(i))
+    //     Point p1 = Q.get(i);
+    //     Point p2 = Q.get(i+1);
+    //     // if (pm.sumXY(p1) == pm.sumXY(p2)) {
+    //       Q.remove(p1);
+    //       Q.remove(p2);
+    //       Point newPoint = new Point(Math.min(p1.getX(), p2.getX()), Math.min(p1.getY(), p2.getY()));
+    //       newPoints.add(newPoint);
+    //       // G.add(newPoint);
+    //       Q.add(newPoint);
+    //       pm.sortPoints(Q);
+    //       edges.add(em.prepareEdge(newPoint, p1));
+    //       edges.add(em.prepareEdge(newPoint, p2));
+    //     // }
+    //   }
+    //   System.out.println(Q.size());
+    // }
 
     for (int i = 0; i < points.size()-1; i++) {
       Point newPoint = new Point();

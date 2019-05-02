@@ -37,25 +37,31 @@ w roku akademickim 2018/2019.
   <tr>
     <td>5</td>
     <td>Prostokątna gałąź Steinera</td>
-    <td>29.04.2019</td>
+    <td>06.05.2019</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>PD. Programowanie dynamiczne</td>
+    <td>20.05.2019</td>
     <td>-</td>
   </tr>
   <tr>
     <td>6</td>
     <td>PTAS. Schematy aproksymacyjne</td>
-    <td>13.05.2019</td>
+    <td>03.06.2019</td>
     <td>-</td>
   </tr>
   <tr align="right">
     <td colspan="3"><b>SUMA:</b></td>
-    <td>17/30 pkt</td>
+    <td>17/35 pkt</td>
   </tr>
   <tr align="right">
     <td colspan="3"><b>PROCENT:</b></td>
-    <td>57%</td>
+    <td>49%</td>
   </tr>
   <tr align="right">
     <td colspan="3"><b>OCENA:</b></td>
-    <td>3.0</td>
+    <td>2.0</td>
   </tr>
 </table>
