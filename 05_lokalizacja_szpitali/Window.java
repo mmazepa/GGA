@@ -119,7 +119,7 @@ public class Window extends JPanel {
 
   public void drawCircle(Graphics g, Point center, Color color) {
     g.setColor(color);
-    int r = (int)(100*App.furthestDistance);
+    int r = (int)(100*App.optimizedDistance);
     Point p_adjusted = preparePoint(center);
 
     int x = (int)p_adjusted.getX()-r/2 + 5;

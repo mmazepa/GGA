@@ -24,12 +24,36 @@ public class PointManager {
   }
 
   public static void displayPoints(ArrayList<Point> points) {
-    vm.title("Number of points: " + points.size(), App.horizontalLength);
+    vm.title("Liczba punktów: " + points.size(), App.horizontalLength);
     displayHalfPoints("X", points);
     displayHalfPoints("Y", points);
   }
 
   public static double getDistance(Point p1, Point p2) {
     return Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(), 2));
+  }
+
+  public static Point getCentroid(ArrayList<Point> hospitals) {
+    double centroidX = 0.0;
+    double centroidY = 0.0;
+    for (Point hospital : hospitals) {
+      centroidX += hospital.getX();
+      centroidY += hospital.getY();
+    }
+    return new Point(centroidX/hospitals.size(), centroidY/hospitals.size());
+  }
+
+  public static double getGroupDistance(ArrayList<Point> hospitals, Point point) {
+    Point centroid = getCentroid(hospitals);
+    return getDistance(centroid, point);
+  }
+
+  public static double getMinimum(ArrayList<Double> distances) {
+    double minimum = distances.get(0);
+    for (Double distance : distances) {
+      System.out.println(distance + " < " + minimum + " ? " + (distance < minimum));
+      if (distance < minimum) minimum = distance;
+    }
+    return minimum;
   }
 }

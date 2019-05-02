@@ -47,7 +47,7 @@ w roku akademickim 2018/2019.
     <td>-</td>
   </tr>
   <tr>
-    <td>6</td>
+    <td>7</td>
     <td>PTAS. Schematy aproksymacyjne</td>
     <td>03.06.2019</td>
     <td>-</td>
