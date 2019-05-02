@@ -117,6 +117,26 @@ public class Window extends JPanel {
     drawText(g, framedTitle, titlePoint, Color.WHITE);
   }
 
+  public void drawCircle(Graphics g, Point center, Color color) {
+    g.setColor(color);
+    int r = (int)(100*App.furthestDistance);
+    Point p_adjusted = preparePoint(center);
+
+    int x = (int)p_adjusted.getX()-r/2 + 5;
+    int y = (int)p_adjusted.getY()-r/2 - 8;
+
+    g.drawOval(x, y, r, r);
+    // drawPoint(g, new Point(center.getX(), center.getY()+App.furthestDistance), Color.MAGENTA);
+    // drawPoint(g, new Point(center.getX(), center.getY()-App.furthestDistance), Color.MAGENTA);
+    // drawPoint(g, new Point(center.getX()+App.furthestDistance, center.getY()), Color.MAGENTA);
+    // drawPoint(g, new Point(center.getX()-App.furthestDistance, center.getY()), Color.MAGENTA);
+    g.setColor(Color.BLACK);
+  }
+
+  public void drawAllCircles(Graphics g, ArrayList<Point> centers, Color color) {
+    for (Point center : centers) drawCircle(g, center, color);
+  }
+
   public void paintComponent(Graphics g) {
     Point min_border = new Point(-1.5, -1.5);
     Point max_border = new Point(11.0, 11.0);
@@ -129,7 +149,9 @@ public class Window extends JPanel {
     fillBox(g, min_border, max_border, mainColor);
     prepareMainBox(g);
 
+    drawAllCircles(g, App.hospitals, Color.RED);
     drawAllPoints(g, App.points, Color.BLACK);
+    drawAllPoints(g, App.hospitals, Color.RED);
 
     drawTitleWithShadow(g, titlePoint, titleShadowPoint);
     g.setFont(g.getFont().deriveFont(Font.BOLD, 10.0f));
