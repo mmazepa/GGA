@@ -126,10 +126,6 @@ public class Window extends JPanel {
     int y = (int)p_adjusted.getY()-r/2 - 8;
 
     g.drawOval(x, y, r, r);
-    // drawPoint(g, new Point(center.getX(), center.getY()+App.furthestDistance), Color.MAGENTA);
-    // drawPoint(g, new Point(center.getX(), center.getY()-App.furthestDistance), Color.MAGENTA);
-    // drawPoint(g, new Point(center.getX()+App.furthestDistance, center.getY()), Color.MAGENTA);
-    // drawPoint(g, new Point(center.getX()-App.furthestDistance, center.getY()), Color.MAGENTA);
     g.setColor(Color.BLACK);
   }
 
