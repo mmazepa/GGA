@@ -56,4 +56,26 @@ public class PointManager {
     }
     return minimum;
   }
+
+  public static double getMinimumIndex(ArrayList<Double> distances) {
+    double minimum = distances.get(0);
+    int index = 0;
+    for (int i = 0; i < distances.size(); i++) {
+      System.out.println(distances.get(i) + " < " + minimum + " ? " + (distances.get(i) < minimum));
+      if (distances.get(i) < minimum) {
+        minimum = distances.get(i);
+        index = i;
+      }
+    }
+    return index;
+  }
+
+  public static double getMaximum(ArrayList<Double> distances) {
+    double maximum = distances.get(0);
+    for (Double distance : distances) {
+      System.out.println(distance + " > " + maximum + " ? " + (distance > maximum));
+      if (distance > maximum) maximum = distance;
+    }
+    return maximum;
+  }
 }

@@ -44,6 +44,50 @@ public class App {
     System.exit(0);
   }
 
+  public static void calculateOptimizedDistance() {
+    for (Point point : points) {
+      System.out.println("---");
+      for (Point hospital : hospitals) {
+        double dist = pm.getDistance(point, hospital);
+        if (optimizedDistance != 0.0)
+          optimizedDistance = Math.min(optimizedDistance, dist);
+        else
+          optimizedDistance = dist;
+        System.out.println(point + " -> " + hospital + " : " + dist);
+      }
+      optimizedDistances.add(optimizedDistance);
+      optimizedDistance = 0.0;
+    }
+    System.out.println("---");
+    optimizedDistance = pm.getMaximum(optimizedDistances);
+  }
+
+  public static void calculateNewHospitals(int k) {
+    for (int j = 1; j < k; j++) {
+      Point furthest = hospitals.get(j-1);
+      int counter = 1;
+      for (Point point : points) {
+        double dist = pm.getGroupDistance(hospitals, point);
+        System.out.println("   [" + (counter) + "] " + point + " : " + dist);
+        if (dist > furthestDistance) {
+          if (furthestDistance != 0.0)
+            furthestDistance = Math.max(dist, furthestDistance);
+          else
+            furthestDistance = dist;
+          furthest = point;
+        }
+        counter++;
+      }
+      furthestDistances.add(furthestDistance);
+      furthestDistance = 0.0;
+
+      hospitals.add(furthest);
+      points.remove(furthest);
+      System.out.println("SZPITAL "  + (j) + ": " + furthest);
+    }
+    furthestDistance = pm.getMinimum(furthestDistances);
+  }
+
   public static void main(String args[]) {
     checkIfFileNameIsPassed(args);
 
@@ -67,45 +111,8 @@ public class App {
     points.remove(firstHospital);
     System.out.println("SZPITAL "  + 1 + ": " + firstHospital);
 
-    for (int j = 1; j < k; j++) {
-      Point furthest = hospitals.get(j-1);
-      furthestDistance = 0.0;
-      // System.out.println("SZPITAL "  + j + ": " + furthest);
-      for (int i = 0; i < points.size(); i++) {
-        double dist = pm.getGroupDistance(hospitals, points.get(i));
-        System.out.println("   [" + (i+1) + "] " + points.get(i) + " : " + dist);
-        if (dist > furthestDistance) {
-          if (furthestDistance != 0.0)
-            furthestDistance = Math.max(dist, furthestDistance);
-          else
-            furthestDistance = dist;
-          furthest = points.get(i);
-        }
-      }
-
-      furthestDistances.add(furthestDistance);
-      //optimizedDistance = pm.getMinimum(furthestDistances);
-
-      hospitals.add(furthest);
-      points.remove(furthest);
-      System.out.println("SZPITAL "  + (j+1) + ": " + furthest);
-    }
-
-    for (Point hospital : hospitals) {
-      System.out.println("---");
-      for (Point point : points) {
-        double dist = pm.getDistance(point, hospital);
-        if (optimizedDistance != 0.0)
-          optimizedDistance = Math.max(optimizedDistance, dist);
-        else
-          optimizedDistance = dist;
-        System.out.println(point + " -> " + hospital + " : " + dist);
-      }
-      optimizedDistances.add(optimizedDistance);
-      optimizedDistance = 0.0;
-    }
-    System.out.println("---");
-    optimizedDistance = pm.getMinimum(optimizedDistances);
+    calculateNewHospitals(k);
+    calculateOptimizedDistance();
 
     vm.horizontalLine(horizontalLength);
 
