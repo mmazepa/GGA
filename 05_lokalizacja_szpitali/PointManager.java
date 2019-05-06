@@ -33,49 +33,17 @@ public class PointManager {
     return Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(), 2));
   }
 
-  public static Point getCentroid(ArrayList<Point> hospitals) {
-    double centroidX = 0.0;
-    double centroidY = 0.0;
-    for (Point hospital : hospitals) {
-      centroidX += hospital.getX();
-      centroidY += hospital.getY();
-    }
-    return new Point(centroidX/hospitals.size(), centroidY/hospitals.size());
-  }
-
-  public static double getGroupDistance(ArrayList<Point> hospitals, Point point) {
-    Point centroid = getCentroid(hospitals);
-    return getDistance(centroid, point);
-  }
-
   public static double getMinimum(ArrayList<Double> distances) {
     double minimum = distances.get(0);
-    for (Double distance : distances) {
-      System.out.println(distance + " < " + minimum + " ? " + (distance < minimum));
+    for (Double distance : distances)
       if (distance < minimum) minimum = distance;
-    }
     return minimum;
-  }
-
-  public static double getMinimumIndex(ArrayList<Double> distances) {
-    double minimum = distances.get(0);
-    int index = 0;
-    for (int i = 0; i < distances.size(); i++) {
-      System.out.println(distances.get(i) + " < " + minimum + " ? " + (distances.get(i) < minimum));
-      if (distances.get(i) < minimum) {
-        minimum = distances.get(i);
-        index = i;
-      }
-    }
-    return index;
   }
 
   public static double getMaximum(ArrayList<Double> distances) {
     double maximum = distances.get(0);
-    for (Double distance : distances) {
-      System.out.println(distance + " > " + maximum + " ? " + (distance > maximum));
+    for (Double distance : distances)
       if (distance > maximum) maximum = distance;
-    }
     return maximum;
   }
 }

@@ -44,22 +44,37 @@ public class App {
     System.exit(0);
   }
 
+  public static void calculateNewHospitalsWithOpimizedDistance(int k) {
+    if (k > 1 && k <= points.size()+1)
+      calculateNewHospitals(k);
+    calculateOptimizedDistance();
+  }
+
   public static void calculateOptimizedDistance() {
     for (Point point : points) {
-      System.out.println("---");
       for (Point hospital : hospitals) {
         double dist = pm.getDistance(point, hospital);
         if (optimizedDistance != 0.0)
           optimizedDistance = Math.min(optimizedDistance, dist);
         else
           optimizedDistance = dist;
-        System.out.println(point + " -> " + hospital + " : " + dist);
       }
       optimizedDistances.add(optimizedDistance);
       optimizedDistance = 0.0;
     }
-    System.out.println("---");
     optimizedDistance = pm.getMaximum(optimizedDistances);
+  }
+
+  public static double calculateOptimizedDistanceForOnePoint(Point point) {
+    double optimizedDistance = 0.0;
+    for (Point hospital : hospitals) {
+      double dist = pm.getDistance(point, hospital);
+      if (optimizedDistance != 0.0)
+        optimizedDistance = Math.min(optimizedDistance, dist);
+      else
+        optimizedDistance = dist;
+    }
+    return optimizedDistance;
   }
 
   public static void calculateNewHospitals(int k) {
@@ -67,25 +82,24 @@ public class App {
       Point furthest = hospitals.get(j-1);
       int counter = 1;
       for (Point point : points) {
-        double dist = pm.getGroupDistance(hospitals, point);
-        System.out.println("   [" + (counter) + "] " + point + " : " + dist);
-        if (dist > furthestDistance) {
-          if (furthestDistance != 0.0)
-            furthestDistance = Math.max(dist, furthestDistance);
-          else
-            furthestDistance = dist;
+        double dist = calculateOptimizedDistanceForOnePoint(point);
+        if (furthestDistance < dist) {
+          System.out.println("   [" + (counter) + "] " + point + " : " + dist);
+          furthestDistance = dist;
           furthest = point;
         }
         counter++;
       }
+
       furthestDistances.add(furthestDistance);
       furthestDistance = 0.0;
 
       hospitals.add(furthest);
       points.remove(furthest);
-      System.out.println("SZPITAL "  + (j) + ": " + furthest);
+      System.out.println("SZPITAL "  + (j+1) + ": " + furthest);
     }
-    furthestDistance = pm.getMinimum(furthestDistances);
+    // System.out.println(furthestDistance);
+    furthestDistance = pm.getMaximum(furthestDistances);
   }
 
   public static void main(String args[]) {
@@ -104,15 +118,14 @@ public class App {
 
     vm.title("PROBLEM LOKALIZACJI SZPITALI", horizontalLength);
 
-    int k = hospitalsAmount;
-    Point firstHospital = points.get(0);
+    if (hospitalsAmount < 1) exitOnPurpose("Nie może być mniej niż 1 szpital!");
 
+    Point firstHospital = points.get(0);
     hospitals.add(firstHospital);
     points.remove(firstHospital);
     System.out.println("SZPITAL "  + 1 + ": " + firstHospital);
 
-    calculateNewHospitals(k);
-    calculateOptimizedDistance();
+    calculateNewHospitalsWithOpimizedDistance(hospitalsAmount);
 
     vm.horizontalLine(horizontalLength);
 

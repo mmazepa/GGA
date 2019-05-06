@@ -118,15 +118,18 @@ public class Window extends JPanel {
   }
 
   public void drawCircle(Graphics g, Point center, Color color) {
-    g.setColor(color);
     int r = (int)(100*App.optimizedDistance);
     Point p_adjusted = preparePoint(center);
-
     int x = (int)p_adjusted.getX()-r/2 + 5;
     int y = (int)p_adjusted.getY()-r/2 - 8;
 
-    g.drawOval(x, y, r, r);
-    g.setColor(Color.BLACK);
+    Graphics2D g2d = (Graphics2D) g.create();
+    float[] dash = {4f, 0f, 2f};
+    Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1.0f, dash, 2f);
+    g2d.setColor(color);
+    g2d.setStroke(dashed);
+    g2d.drawOval(x, y, r, r);
+    g2d.dispose();
   }
 
   public void drawAllCircles(Graphics g, ArrayList<Point> centers, Color color) {
