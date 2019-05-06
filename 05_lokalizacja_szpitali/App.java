@@ -13,7 +13,6 @@ public class App {
   public static double furthestDistance = 0.0;
   public static double optimizedDistance = 0.0;
 
-  public static ArrayList<Double> furthestDistances = new ArrayList<Double>();
   public static ArrayList<Double> optimizedDistances = new ArrayList<Double>();
 
   public static FileManager fm = new FileManager();
@@ -54,10 +53,12 @@ public class App {
     for (Point point : points) {
       for (Point hospital : hospitals) {
         double dist = pm.getDistance(point, hospital);
-        if (optimizedDistance != 0.0)
-          optimizedDistance = Math.min(optimizedDistance, dist);
-        else
-          optimizedDistance = dist;
+        if (furthestDistance < dist) {
+          if (optimizedDistance != 0.0)
+            optimizedDistance = Math.min(optimizedDistance, dist);
+          else
+            optimizedDistance = dist;
+        }
       }
       optimizedDistances.add(optimizedDistance);
       optimizedDistance = 0.0;
@@ -84,22 +85,18 @@ public class App {
       for (Point point : points) {
         double dist = calculateOptimizedDistanceForOnePoint(point);
         if (furthestDistance < dist) {
-          System.out.println("   [" + (counter) + "] " + point + " : " + dist);
+          System.out.println("      [" + (counter) + "] " + point + " : " + dist);
           furthestDistance = dist;
           furthest = point;
         }
         counter++;
       }
-
-      furthestDistances.add(furthestDistance);
       furthestDistance = 0.0;
 
       hospitals.add(furthest);
       points.remove(furthest);
-      System.out.println("SZPITAL "  + (j+1) + ": " + furthest);
+      System.out.println("   SZPITAL "  + (j+1) + ": " + furthest);
     }
-    // System.out.println(furthestDistance);
-    furthestDistance = pm.getMaximum(furthestDistances);
   }
 
   public static void main(String args[]) {
@@ -120,18 +117,19 @@ public class App {
 
     if (hospitalsAmount < 1) exitOnPurpose("Nie może być mniej niż 1 szpital!");
 
-    Point firstHospital = points.get(0);
-    hospitals.add(firstHospital);
-    points.remove(firstHospital);
-    System.out.println("SZPITAL "  + 1 + ": " + firstHospital);
+    if (hospitalsAmount == points.size()) {
+      hospitals.addAll(points);
+      points.clear();
+    } else {
+      Point firstHospital = points.get(0);
+      hospitals.add(firstHospital);
+      points.remove(firstHospital);
+      System.out.println("   SZPITAL "  + 1 + ": " + firstHospital);
 
-    calculateNewHospitalsWithOpimizedDistance(hospitalsAmount);
+      calculateNewHospitalsWithOpimizedDistance(hospitalsAmount);
+    }
 
     vm.horizontalLine(horizontalLength);
-
-    vm.title("ODLEGŁOŚCI", horizontalLength);
-    System.out.println("   ODLEGŁOŚĆ _________: " + furthestDistance);
-    System.out.println("   ODLEGŁOŚĆ OPTYMALNA: " + optimizedDistance);
 
     vm.title("SZPITALE", horizontalLength);
     int hospitalCount = 1;
@@ -139,6 +137,8 @@ public class App {
       System.out.println("   SZPITAL " + hospitalCount + ": " + hospital);
       hospitalCount++;
     }
+
+    vm.displayFramed("r = " + optimizedDistance);
 
     vm.horizontalLine(horizontalLength);
     Window.display();

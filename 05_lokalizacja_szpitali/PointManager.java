@@ -33,13 +33,6 @@ public class PointManager {
     return Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(), 2));
   }
 
-  public static double getMinimum(ArrayList<Double> distances) {
-    double minimum = distances.get(0);
-    for (Double distance : distances)
-      if (distance < minimum) minimum = distance;
-    return minimum;
-  }
-
   public static double getMaximum(ArrayList<Double> distances) {
     double maximum = distances.get(0);
     for (Double distance : distances)

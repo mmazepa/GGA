@@ -36,7 +36,7 @@ w roku akademickim 2018/2019.
   </tr>
   <tr>
     <td>5</td>
-    <td>Prostokątna gałąź Steinera</td>
+    <td>Lokalizacja szpitali</td>
     <td>06.05.2019</td>
     <td>-</td>
   </tr>

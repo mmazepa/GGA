@@ -6,9 +6,9 @@ public class VisualManager {
   }
 
   public static void displayFramed(String text) {
-    System.out.println("╔" + frameIt("═", text.length()+2) + "╗");
-    System.out.println("║ " + text + " ║ ");
-    System.out.println("╚" + frameIt("═", text.length()+2) + "╝");
+    System.out.println("   ╔" + frameIt("═", text.length()+2) + "╗");
+    System.out.println("   ║ " + text + " ║ ");
+    System.out.println("   ╚" + frameIt("═", text.length()+2) + "╝");
   }
 
   public static void title(String text, int length) {
