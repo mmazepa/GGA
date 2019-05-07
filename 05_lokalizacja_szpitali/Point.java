@@ -1,6 +1,7 @@
 public class Point {
   private double x;
   private double y;
+  private double dist;
 
   public Point() {}
 
@@ -21,6 +22,13 @@ public class Point {
   }
   public double getY() {
     return y;
+  }
+
+  public void setDist(double dist) {
+    this.dist = dist;
+  }
+  public double getDist() {
+    return dist;
   }
 
   public String toString() {

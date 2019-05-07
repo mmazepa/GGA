@@ -1,8 +1,4 @@
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Stack;
-import java.util.Collections;
-import java.awt.Polygon;
 
 public class App {
   public static ArrayList<Point> points = new ArrayList<Point>();
@@ -12,8 +8,6 @@ public class App {
   public static ArrayList<Point> hospitals = new ArrayList<Point>();
   public static double furthestDistance = 0.0;
   public static double optimizedDistance = 0.0;
-
-  public static ArrayList<Double> optimizedDistances = new ArrayList<Double>();
 
   public static FileManager fm = new FileManager();
   public static PointManager pm = new PointManager();
@@ -51,30 +45,24 @@ public class App {
 
   public static void calculateOptimizedDistance() {
     for (Point point : points) {
-      for (Point hospital : hospitals) {
-        double dist = pm.getDistance(point, hospital);
-        if (furthestDistance < dist) {
-          if (optimizedDistance != 0.0)
-            optimizedDistance = Math.min(optimizedDistance, dist);
-          else
-            optimizedDistance = dist;
-        }
+      double dist = calculateOptimizedDistanceForOnePoint(point, hospitals.get(hospitals.size()-1));
+      if (furthestDistance < dist) {
+        if (optimizedDistance != 0.0)
+          optimizedDistance = Math.max(optimizedDistance, dist);
+        else
+          optimizedDistance = dist;
       }
-      optimizedDistances.add(optimizedDistance);
-      optimizedDistance = 0.0;
     }
-    optimizedDistance = pm.getMaximum(optimizedDistances);
   }
 
-  public static double calculateOptimizedDistanceForOnePoint(Point point) {
-    double optimizedDistance = 0.0;
-    for (Point hospital : hospitals) {
-      double dist = pm.getDistance(point, hospital);
-      if (optimizedDistance != 0.0)
-        optimizedDistance = Math.min(optimizedDistance, dist);
-      else
-        optimizedDistance = dist;
-    }
+  public static double calculateOptimizedDistanceForOnePoint(Point point, Point hospital) {
+    double optimizedDistance = point.getDist();
+    double dist = pm.getDistance(point, hospital);
+    if (optimizedDistance != 0.0)
+      optimizedDistance = Math.min(optimizedDistance, dist);
+    else
+      optimizedDistance = dist;
+    point.setDist(optimizedDistance);
     return optimizedDistance;
   }
 
@@ -83,11 +71,13 @@ public class App {
       Point furthest = hospitals.get(j-1);
       int counter = 1;
       for (Point point : points) {
-        double dist = calculateOptimizedDistanceForOnePoint(point);
+        double dist = calculateOptimizedDistanceForOnePoint(point, hospitals.get(j-1));
         if (furthestDistance < dist) {
-          System.out.println("      [" + (counter) + "] " + point + " : " + dist);
+          System.out.println("     *[" + (counter) + "] " + point + " : " + dist);
           furthestDistance = dist;
           furthest = point;
+        } else {
+          System.out.println("      [" + (counter) + "] " + point + " : " + dist);
         }
         counter++;
       }
@@ -131,7 +121,7 @@ public class App {
 
     vm.horizontalLine(horizontalLength);
 
-    vm.title("SZPITALE", horizontalLength);
+    vm.title("SZPITALE: " + hospitals.size(), horizontalLength);
     int hospitalCount = 1;
     for (Point hospital : hospitals) {
       System.out.println("   SZPITAL " + hospitalCount + ": " + hospital);

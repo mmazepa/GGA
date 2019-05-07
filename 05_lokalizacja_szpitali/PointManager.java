@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class PointManager {
   static VisualManager vm = new VisualManager();
@@ -31,12 +29,5 @@ public class PointManager {
 
   public static double getDistance(Point p1, Point p2) {
     return Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(), 2));
-  }
-
-  public static double getMaximum(ArrayList<Double> distances) {
-    double maximum = distances.get(0);
-    for (Double distance : distances)
-      if (distance > maximum) maximum = distance;
-    return maximum;
   }
 }
