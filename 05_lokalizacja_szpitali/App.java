@@ -45,12 +45,7 @@ public class App {
   public static void calculateOptimizedDistance() {
     for (Point point : points) {
       double dist = calculateOptimizedDistanceForOnePoint(point, hospitals.get(hospitals.size()-1));
-      if (furthestDistance < dist) {
-        if (optimizedDistance != 0.0)
-          optimizedDistance = Math.max(optimizedDistance, dist);
-        else
-          optimizedDistance = dist;
-      }
+      optimizedDistance = Math.max(optimizedDistance, dist);
     }
   }
 
