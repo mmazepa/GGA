@@ -38,8 +38,7 @@ public class App {
   }
 
   public static void calculateNewHospitalsWithOpimizedDistance(int k) {
-    if (k > 1 && k <= points.size()+1)
-      calculateNewHospitals(k);
+    calculateNewHospitals(k);
     calculateOptimizedDistance();
   }
 
@@ -68,7 +67,7 @@ public class App {
 
   public static void calculateNewHospitals(int k) {
     for (int j = 1; j < k; j++) {
-      Point furthest = hospitals.get(j-1);
+      Point furthest = new Point();
       int counter = 1;
       for (Point point : points) {
         double dist = calculateOptimizedDistanceForOnePoint(point, hospitals.get(j-1));
