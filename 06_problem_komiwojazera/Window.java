@@ -84,6 +84,16 @@ public class Window extends JPanel {
     }
   }
 
+  public static void drawAllEdges(Graphics g, ArrayList<Edge> edges, Color color) {
+    g.setColor(color);
+    for (Edge edge : edges) {
+      Point p1 = preparePoint(edge.getPoint1());
+      Point p2 = preparePoint(edge.getPoint2());
+      g.drawLine(toInt(p1.getX()+6), toInt(p1.getY()-7), toInt(p2.getX()+6), toInt(p2.getY()-7));
+    }
+    g.setColor(Color.BLACK);
+  }
+
   public Point calculateShadows(Point p, double x_shift, double y_shift) {
     Point shadow = new Point(p.getX(), p.getY());
     shadow.setX(shadow.getX() + x_shift);
@@ -128,6 +138,7 @@ public class Window extends JPanel {
     fillBox(g, min_border, max_border, mainColor);
     prepareMainBox(g);
 
+    drawAllEdges(g, App.edges, Color.LIGHT_GRAY);
     drawAllPoints(g, App.points, Color.BLACK);
 
     drawTitleWithShadow(g, titlePoint, titleShadowPoint);

@@ -2,8 +2,10 @@ import java.util.ArrayList;
 
 public class App {
   public static ArrayList<Point> points = new ArrayList<Point>();
+  public static ArrayList<Edge> edges = new ArrayList<Edge>();
   public static String inputFileName = new String();
 
+  public static EdgeManager em = new EdgeManager();
   public static FileManager fm = new FileManager();
   public static PointManager pm = new PointManager();
   public static VisualManager vm = new VisualManager();
@@ -30,6 +32,13 @@ public class App {
     pm.checkPoints(points);
 
     pm.displayPoints(points);
+    vm.horizontalLine(horizontalLength);
+
+    edges = em.prepareFullGraph(points);
+    vm.horizontalLine(horizontalLength);
+
+    System.out.println("   ILOŚĆ PUNKTÓW: " + points.size());
+    System.out.println("   SUMA KRAWĘDZI: " + edges.size());
     vm.horizontalLine(horizontalLength);
 
     vm.title("PROBLEM KOMIWOJAŻERA", horizontalLength);
