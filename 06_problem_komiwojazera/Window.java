@@ -68,19 +68,36 @@ public class Window extends JPanel {
     g.setColor(Color.BLACK);
   }
 
-  public static void drawPoint(Graphics g, Point p, Color color) {
+  public static void drawPoint(Graphics g, Point p, int index, Color color) {
     g.setColor(color);
     Point p_adjusted = preparePoint(p);
-    g.setFont(g.getFont().deriveFont(20.0f));
-    drawCustomString(g, pointSign, p_adjusted, 0, 0);
+    g.setFont(g.getFont().deriveFont(75.0f));
+    drawCustomString(g, pointSign, p_adjusted, -15, 21);
+
+    int x_shift = 0;
+    int y_shift = 0;
+
+    if (index < 10) {
+      g.setFont(g.getFont().deriveFont(20.0f));
+      x_shift = 1;
+      y_shift = 0;
+    } else {
+      g.setFont(g.getFont().deriveFont(12.0f));
+      x_shift = 0;
+      y_shift = -2;
+    }
+
+    g.setColor(Color.WHITE);
+    drawCustomString(g, "" + index + "", p_adjusted, x_shift, y_shift);
+    g.setColor(color);
     g.setFont(g.getFont().deriveFont(10.0f));
-    drawCustomString(g, p.toString(), p_adjusted, -15, -15);
+    drawCustomString(g, p.toString(), p_adjusted, -15, 15);
     g.setColor(Color.BLACK);
   }
 
   public static void drawAllPoints(Graphics g, ArrayList<Point> points, Color color) {
     for (int i = 0; i < points.size(); i++) {
-      drawPoint(g, points.get(i), color);
+      drawPoint(g, points.get(i), (i+1), color);
     }
   }
 
@@ -139,6 +156,7 @@ public class Window extends JPanel {
     prepareMainBox(g);
 
     drawAllEdges(g, App.edges, Color.LIGHT_GRAY);
+    drawAllEdges(g, App.edgesPath, Color.RED);
     drawAllPoints(g, App.points, Color.BLACK);
 
     drawTitleWithShadow(g, titlePoint, titleShadowPoint);

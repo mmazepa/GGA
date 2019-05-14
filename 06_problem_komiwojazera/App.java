@@ -5,6 +5,12 @@ public class App {
   public static ArrayList<Edge> edges = new ArrayList<Edge>();
   public static String inputFileName = new String();
 
+  public static double[][] distanceMatrix;
+  public static double optimalDistance = Double.MAX_VALUE;
+  public static String optimalPath = "";
+  public static ArrayList<Point> finalPath = new ArrayList<Point>();
+  public static ArrayList<Edge> edgesPath = new ArrayList<Edge>();
+
   public static EdgeManager em = new EdgeManager();
   public static FileManager fm = new FileManager();
   public static PointManager pm = new PointManager();
@@ -25,6 +31,57 @@ public class App {
     System.exit(0);
   }
 
+  public static double algorithmTSP(int initial, int[] vertices, String path, double costUntilHere) {
+    path = path + Integer.toString(initial) + "-";
+    int length = vertices.length;
+    double newCostUntilHere;
+
+    if (length == 0) {
+      newCostUntilHere = costUntilHere + distanceMatrix[initial][0];
+
+      if (newCostUntilHere < optimalDistance){
+        optimalDistance = newCostUntilHere;
+        optimalPath = path + "0";
+      }
+      return (distanceMatrix[initial][0]);
+    } else if (costUntilHere > optimalDistance) {
+      return 0;
+    } else {
+      int[][] newVertices = new int[length][(length - 1)];
+      double costCurrentNode, costChild;
+      double bestCost = Double.MAX_VALUE;
+
+      for (int i = 0; i < length; i++) {
+        for (int j = 0, k = 0; j < length; j++, k++) {
+          if (j == i) {
+            k--;
+            continue;
+          }
+          newVertices[i][k] = vertices[j];
+        }
+
+        costCurrentNode = distanceMatrix[initial][vertices[i]];
+        newCostUntilHere = costCurrentNode + costUntilHere;
+        costChild = algorithmTSP(vertices[i], newVertices[i], path, newCostUntilHere);
+
+        double totalCost = costChild + costCurrentNode;
+        if (totalCost < bestCost) {
+          bestCost = totalCost;
+        }
+      }
+      return bestCost;
+    }
+  }
+
+  public static ArrayList<Point> translatePath(String path) {
+    ArrayList<Point> translated = new ArrayList<Point>();
+    String[] splitted = path.split("-");
+    for (int i = 0; i < splitted.length; i++) {
+      translated.add(points.get(Integer.parseInt(splitted[i])));
+    }
+    return translated;
+  }
+
   public static void main(String args[]) {
     checkIfFileNameIsPassed(args);
 
@@ -41,11 +98,48 @@ public class App {
     System.out.println("   SUMA KRAWĘDZI: " + edges.size());
     vm.horizontalLine(horizontalLength);
 
+    distanceMatrix = new double[points.size()][points.size()];
+
     vm.title("PROBLEM KOMIWOJAŻERA", horizontalLength);
 
-    System.out.println("   Algorytm w budowie...");
+    String path = "";
+    int[] vertices = new int[points.size()-1];
+
+    for (int i = 1; i < points.size(); i++) {
+      vertices[i - 1] = i;
+    }
+
+    for (int i = 0; i < distanceMatrix.length; i++) {
+      for (int j = 0; j < distanceMatrix[i].length; j++) {
+        if (i != j) {
+          distanceMatrix[i][j] = pm.getDistance(points.get(i), points.get(j));
+        }
+      }
+    }
+
+    em.displayDistanceMatrix(distanceMatrix);
+    vm.horizontalLine(horizontalLength);
+
+    algorithmTSP(0, vertices, path, 0);
+
+    finalPath = translatePath(optimalPath);
+
+    System.out.println("   Cykl:  " + optimalPath);
+
+    for (int i = 0; i < finalPath.size(); i++) {
+      System.out.println("      " + finalPath.get(i));
+      Edge tmpEdge = new Edge();
+      if (i < finalPath.size()-1)
+        tmpEdge = new Edge(finalPath.get(i), finalPath.get(i+1));
+      else
+        tmpEdge = new Edge(finalPath.get(i), finalPath.get(0));
+      edgesPath.add(tmpEdge);
+    }
+
+    System.out.println("   Koszt: " + optimalDistance);
 
     vm.horizontalLine(horizontalLength);
+
     Window.display();
   }
 }
