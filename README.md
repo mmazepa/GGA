@@ -42,7 +42,7 @@ w roku akademickim 2018/2019.
   </tr>
   <tr>
     <td>6</td>
-    <td>PD. Programowanie dynamiczne</td>
+    <td>Problem komiwojażera</td>
     <td>20.05.2019</td>
     <td>-</td>
   </tr>
