@@ -97,7 +97,7 @@ public class Window extends JPanel {
 
   public static void drawAllPoints(Graphics g, ArrayList<Point> points, Color color) {
     for (int i = 0; i < points.size(); i++) {
-      drawPoint(g, points.get(i), (i+1), color);
+      drawPoint(g, points.get(i), i, color);
     }
   }
 

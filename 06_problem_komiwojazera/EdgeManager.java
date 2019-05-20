@@ -29,13 +29,13 @@ public class EdgeManager {
   public static void displayDistanceMatrix(double[][] distanceMatrix) {
     System.out.print("      ");
     for (int i = 0; i < distanceMatrix.length; i++) {
-      String result = String.format("%5s", "[" + (i+1) + "]");
+      String result = String.format("%5s", "[" + i + "]");
       System.out.print(" " + result);
     }
     System.out.print("\n");
 
     for (int i = 0; i < distanceMatrix.length; i++) {
-      String result = String.format("%5s", "[" + (i+1) + "]");
+      String result = String.format("%5s", "[" + i + "]");
       System.out.print(" " + result);
       for (int j = 0; j < distanceMatrix[i].length; j++) {
         if (distanceMatrix[i][j] != 0.0) {

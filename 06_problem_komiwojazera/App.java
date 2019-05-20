@@ -82,6 +82,44 @@ public class App {
     return translated;
   }
 
+  // Problem Komiwojażera (programowanie dynamiczne po maskach bitowych)
+  // https://www.mimuw.edu.pl/~jrad/wpg/zajecia2.html
+  public static double algorithmTSP2() {
+    double[][] dp = new double[points.size()][points.size()];
+    double[][] t = new double[points.size()][points.size()];
+
+    for (int i = 0; i < t.length; i++) {
+      for (int j = 0; j < t[i].length; j++) {
+        if (i != j)
+          t[i][j] = pm.getDistance(points.get(i), points.get(j));
+        else
+          t[i][j] = 0.0;
+      }
+    }
+
+    int n = points.size();  // czy na pewno dobra wartość n?
+    for (int i = 0; i < n; ++i) {
+      dp[0][i] = dp[1 << 0][i] = Double.MAX_VALUE;
+    }
+    dp[1 << 0][0] = 0;
+    for (int mask = 2; mask < (1 << n); ++mask) {
+      n = points.size() - mask; // dodane do algorytmu, żeby odpalił (!!!)
+      for (int i = 0; i < n; ++i) {
+        dp[mask][i] = Double.MAX_VALUE;
+        if ((mask & (1 << i)) != 0) {
+          int mask1 = mask ^ (1 << i);
+          for (int j = 0; j < n; ++j)
+            if ((mask1 & (1 << j)) != 0)
+              dp[mask][i] = Math.min(dp[mask][i], dp[mask1][j] + t[j][i]);
+        }
+      }
+    }
+    double wynik = Double.MAX_VALUE;
+    for (int i = 0; i < n; ++i)
+      wynik = Math.min(wynik, dp[(1 << n) - 1][i] + t[i][0]);
+    return wynik;
+  }
+
   public static void main(String args[]) {
     checkIfFileNameIsPassed(args);
 
@@ -111,9 +149,10 @@ public class App {
 
     for (int i = 0; i < distanceMatrix.length; i++) {
       for (int j = 0; j < distanceMatrix[i].length; j++) {
-        if (i != j) {
+        if (i != j)
           distanceMatrix[i][j] = pm.getDistance(points.get(i), points.get(j));
-        }
+        else
+          distanceMatrix[i][j] = 0.0;
       }
     }
 
@@ -123,11 +162,12 @@ public class App {
     algorithmTSP(0, vertices, path, 0);
 
     finalPath = translatePath(optimalPath);
+    vm.displayFramed("Cykl:  " + optimalPath);
 
-    System.out.println("   Cykl:  " + optimalPath);
+    String[] splittedPath = optimalPath.split("-");
 
     for (int i = 0; i < finalPath.size(); i++) {
-      System.out.println("      " + finalPath.get(i));
+      System.out.println(String.format("   %5s%12s", "[" + splittedPath[i] + "]", finalPath.get(i)));
       Edge tmpEdge = new Edge();
       if (i < finalPath.size()-1)
         tmpEdge = new Edge(finalPath.get(i), finalPath.get(i+1));
@@ -136,8 +176,8 @@ public class App {
       edgesPath.add(tmpEdge);
     }
 
-    System.out.println("   Koszt: " + optimalDistance);
-
+    vm.displayFramed("Koszt:  " + optimalDistance);
+    vm.displayFramed("Koszt:  " + algorithmTSP2());
     vm.horizontalLine(horizontalLength);
 
     Window.display();
