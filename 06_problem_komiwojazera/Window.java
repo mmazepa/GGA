@@ -68,6 +68,14 @@ public class Window extends JPanel {
     g.setColor(Color.BLACK);
   }
 
+  public static void highlightFirstPoint(Graphics g, Point p, int index, Color color) {
+    g.setColor(color);
+    Point p_adjusted = preparePoint(p);
+    g.setFont(g.getFont().deriveFont(85.0f));
+    drawCustomString(g, pointSign, p_adjusted, -19, 24);
+    g.setColor(Color.BLACK);
+  }
+
   public static void drawPoint(Graphics g, Point p, int index, Color color) {
     g.setColor(color);
     Point p_adjusted = preparePoint(p);
@@ -101,14 +109,17 @@ public class Window extends JPanel {
     }
   }
 
-  public static void drawAllEdges(Graphics g, ArrayList<Edge> edges, Color color) {
-    g.setColor(color);
+  public static void drawAllEdges(Graphics g, ArrayList<Edge> edges, int stroke, Color color) {
+    Graphics2D g2 = (Graphics2D) g.create();
+    g2.setStroke(new BasicStroke(stroke));
+
+    g2.setColor(color);
     for (Edge edge : edges) {
       Point p1 = preparePoint(edge.getPoint1());
       Point p2 = preparePoint(edge.getPoint2());
-      g.drawLine(toInt(p1.getX()+6), toInt(p1.getY()-7), toInt(p2.getX()+6), toInt(p2.getY()-7));
+      g2.drawLine(toInt(p1.getX()+6), toInt(p1.getY()-7), toInt(p2.getX()+6), toInt(p2.getY()-7));
     }
-    g.setColor(Color.BLACK);
+    g2.dispose();
   }
 
   public Point calculateShadows(Point p, double x_shift, double y_shift) {
@@ -155,8 +166,9 @@ public class Window extends JPanel {
     fillBox(g, min_border, max_border, mainColor);
     prepareMainBox(g);
 
-    drawAllEdges(g, App.edges, Color.LIGHT_GRAY);
-    drawAllEdges(g, App.edgesPath, Color.RED);
+    drawAllEdges(g, App.edges, 1, Color.LIGHT_GRAY);
+    drawAllEdges(g, App.edgesPath, 2, Color.RED);
+    highlightFirstPoint(g, App.points.get(0), 0, Color.MAGENTA);
     drawAllPoints(g, App.points, Color.BLACK);
 
     drawTitleWithShadow(g, titlePoint, titleShadowPoint);
