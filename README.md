@@ -44,7 +44,7 @@ w roku akademickim 2018/2019.
     <td>6</td>
     <td>Problem komiwojażera</td>
     <td>20.05.2019</td>
-    <td>-</td>
+    <td>5 pkt</td>
   </tr>
   <tr>
     <td>7</td>
@@ -54,14 +54,14 @@ w roku akademickim 2018/2019.
   </tr>
   <tr align="right">
     <td colspan="3"><b>SUMA:</b></td>
-    <td>20/35 pkt</td>
+    <td>25/35 pkt</td>
   </tr>
   <tr align="right">
     <td colspan="3"><b>PROCENT:</b></td>
-    <td>57%</td>
+    <td>71%</td>
   </tr>
   <tr align="right">
     <td colspan="3"><b>OCENA:</b></td>
-    <td>3.0</td>
+    <td>4.0</td>
   </tr>
 </table>
