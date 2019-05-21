@@ -11,13 +11,13 @@ public class EdgeManager {
   public static ArrayList<Edge> prepareFullGraph(ArrayList<Point> points) {
     ArrayList<Edge> fullGraph = new ArrayList<Edge>();
     for (int i = 0; i < points.size(); i++) {
-      for (int j = i+1; j < points.size(); j++) {
+      for (int j = 1+i; j < points.size(); j++) {
         Edge tmpEdge = prepareEdge(points.get(i), points.get(j));
         fullGraph.add(tmpEdge);
         System.out.print("   [" + (i+1) + "," + (j+1) + "]: " + tmpEdge);
 
         double dist = PointManager.getDistance(points.get(i), points.get(j));
-        double rounded = (double) Math.round(dist*100)/100;
+        double rounded = PointManager.round(dist);
         String result = String.format("%5.2f", rounded);
         System.out.print(" : " + result + "\n");
       }
@@ -39,7 +39,7 @@ public class EdgeManager {
       System.out.print(" " + result);
       for (int j = 0; j < distanceMatrix[i].length; j++) {
         if (distanceMatrix[i][j] != 0.0) {
-          double rounded = (double) Math.round(distanceMatrix[i][j]*100)/100;
+          double rounded = PointManager.round(distanceMatrix[i][j]);
           result = String.format("%5.2f", rounded);
           System.out.print(" " + result);
         } else {

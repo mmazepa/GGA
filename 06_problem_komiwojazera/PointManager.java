@@ -27,6 +27,10 @@ public class PointManager {
     displayHalfPoints("Y", points);
   }
 
+  public static double round(double value) {
+    return (double)Math.round(value*100)/100;
+  }
+
   public static double getDistance(Point p1, Point p2) {
     return Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(), 2));
   }

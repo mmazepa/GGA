@@ -169,7 +169,7 @@ public class Window extends JPanel {
     prepareMainBox(g);
 
     drawAllEdges(g, App.edges, 1, Color.LIGHT_GRAY);
-    drawAllEdges(g, App.edgesPath, 2, Color.RED);
+    drawAllEdges(g, App.edgesPath, 3, Color.RED);
     drawAllPoints(g, App.points, Color.BLACK);
     highlightFirstPoint(g, App.points.get(0), 0, Color.BLACK, Color.RED);
 

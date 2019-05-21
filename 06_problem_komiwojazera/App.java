@@ -146,7 +146,7 @@ public class App {
     optimalDistance = solver.getPathCost();
 
     vm.displayFramed("Cykl: " + optimalPath);
-    vm.displayFramed("Koszt: " + optimalDistance);
+    vm.displayFramed("Koszt: " + pm.round(optimalDistance));
 
     edgesPath = translatePathForDisplayer(optimalPath);
     vm.horizontalLine(horizontalLength);
