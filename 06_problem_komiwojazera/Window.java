@@ -68,11 +68,13 @@ public class Window extends JPanel {
     g.setColor(Color.BLACK);
   }
 
-  public static void highlightFirstPoint(Graphics g, Point p, int index, Color color) {
-    g.setColor(color);
+  public static void highlightFirstPoint(Graphics g, Point p, int index, Color color, Color highlight) {
+    g.setColor(highlight);
     Point p_adjusted = preparePoint(p);
-    g.setFont(g.getFont().deriveFont(85.0f));
-    drawCustomString(g, pointSign, p_adjusted, -19, 24);
+    g.setFont(g.getFont().deriveFont(87.5f));
+    drawCustomString(g, pointSign, p_adjusted, -19, 25);
+
+    drawPoint(g, p, index, color);
     g.setColor(Color.BLACK);
   }
 
@@ -168,8 +170,8 @@ public class Window extends JPanel {
 
     drawAllEdges(g, App.edges, 1, Color.LIGHT_GRAY);
     drawAllEdges(g, App.edgesPath, 2, Color.RED);
-    highlightFirstPoint(g, App.points.get(0), 0, Color.MAGENTA);
     drawAllPoints(g, App.points, Color.BLACK);
+    highlightFirstPoint(g, App.points.get(0), 0, Color.BLACK, Color.RED);
 
     drawTitleWithShadow(g, titlePoint, titleShadowPoint);
     g.setFont(g.getFont().deriveFont(Font.BOLD, 10.0f));

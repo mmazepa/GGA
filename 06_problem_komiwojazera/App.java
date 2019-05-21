@@ -6,10 +6,15 @@ public class App {
   public static String inputFileName = new String();
 
   public static double[][] distanceMatrix;
+  public static ArrayList<Integer> optimalPath = new ArrayList<Integer>();
   public static double optimalDistance = Double.MAX_VALUE;
-  public static String optimalPath = "";
-  public static ArrayList<Point> finalPath = new ArrayList<Point>();
   public static ArrayList<Edge> edgesPath = new ArrayList<Edge>();
+
+  private final int N;
+  private final int START_NODE;
+  private final int FINISHED_STATE;
+
+  private boolean ranSolver = false;
 
   public static EdgeManager em = new EdgeManager();
   public static FileManager fm = new FileManager();
@@ -18,12 +23,32 @@ public class App {
 
   public static int horizontalLength = 78;
 
+  public App(double[][] distanceMatrix) {
+    this(0, distanceMatrix);
+  }
+
+  public App(int startNode, double[][] distanceMatrix) {
+    this.distanceMatrix = distanceMatrix;
+    N = distanceMatrix.length;
+    START_NODE = startNode;
+    FINISHED_STATE = (1 << N) - 1;
+  }
+
+  public ArrayList<Integer> getPath() {
+    if (!ranSolver) solve();
+    return optimalPath;
+  }
+
+  public double getPathCost() {
+    if (!ranSolver) solve();
+    return optimalDistance;
+  }
+
   public static void checkIfFileNameIsPassed(String[] args) {
-    if (args.length > 0) {
+    if (args.length > 0)
       inputFileName = args[0];
-    } else {
+    else
       exitOnPurpose("Nie wybrano pliku.");
-    }
   }
 
   public static void exitOnPurpose(String purpose) {
@@ -31,63 +56,60 @@ public class App {
     System.exit(0);
   }
 
+  public void solve() {
+    int state = 1 << START_NODE;
+    Double[][] memo = new Double[N][1 << N];
+    Integer[][] prev = new Integer[N][1 << N];
+    optimalDistance = algorithmTSP(START_NODE, state, memo, prev);
+
+    int index = START_NODE;
+    while (true) {
+      optimalPath.add(index);
+      Integer nextIndex = prev[index][state];
+      if (nextIndex == null) break;
+      int nextState = state | (1 << nextIndex);
+      state = nextState;
+      index = nextIndex;
+    }
+    optimalPath.add(START_NODE);
+    ranSolver = true;
+  }
+
+  private double algorithmTSP(int i, int state, Double[][] memo, Integer[][] prev) {
+    if (state == FINISHED_STATE) return distanceMatrix[i][START_NODE];
+    if (memo[i][state] != null) return memo[i][state];
+
+    double minCost = Double.MAX_VALUE;
+    int index = -1;
+    for (int next = 0; next < N; next++) {
+      if ((state & (1 << next)) != 0) continue;
+
+      int nextState = state | (1 << next);
+      double newCost = distanceMatrix[i][next] + algorithmTSP(next, nextState, memo, prev);
+      if (newCost < minCost) {
+        minCost = newCost;
+        index = next;
+      }
+    }
+    prev[i][state] = index;
+    return memo[i][state] = minCost;
+  }
+
   public static double[][] fillDistanceMatrix(ArrayList<Point> points, double[][] distanceMatrix) {
     for (int i = 0; i < distanceMatrix.length; i++) {
-      for (int j = 0; j < distanceMatrix[i].length; j++) {
-        if (i != j)
-          distanceMatrix[i][j] = pm.getDistance(points.get(i), points.get(j));
-        else
-          distanceMatrix[i][j] = 0.0;
+      for (int j = 1+i; j < distanceMatrix[i].length; j++) {
+        double tmpDist = pm.getDistance(points.get(i), points.get(j));
+        distanceMatrix[i][j] = tmpDist;
+        distanceMatrix[j][i] = tmpDist;
       }
     }
     return distanceMatrix;
   }
 
-  public static double algorithmTSP(int initial, int[] vertices, String path, double costUntilHere) {
-    path = path + Integer.toString(initial) + "-";
-    int length = vertices.length;
-    double newCostUntilHere;
-
-    if (length == 0) {
-      newCostUntilHere = costUntilHere + distanceMatrix[initial][0];
-
-      if (newCostUntilHere < optimalDistance){
-        optimalDistance = newCostUntilHere;
-        optimalPath = path + "0";
-      }
-      return (distanceMatrix[initial][0]);
-    } else if (costUntilHere > optimalDistance) {
-      return 0;
-    } else {
-      int[][] newVertices = new int[length][(length - 1)];
-      double costCurrentNode, costChild;
-      double bestCost = Double.MAX_VALUE;
-
-      for (int i = 0; i < length; i++) {
-        for (int j = 0, k = 0; j < length; j++, k++) {
-          if (j == i) {
-            k--;
-            continue;
-          }
-          newVertices[i][k] = vertices[j];
-        }
-
-        costCurrentNode = distanceMatrix[initial][vertices[i]];
-        newCostUntilHere = costCurrentNode + costUntilHere;
-        costChild = algorithmTSP(vertices[i], newVertices[i], path, newCostUntilHere);
-
-        double totalCost = costChild + costCurrentNode;
-        if (totalCost < bestCost) bestCost = totalCost;
-      }
-      return bestCost;
-    }
-  }
-
-  public static ArrayList<Point> translatePath(String path) {
-    ArrayList<Point> translated = new ArrayList<Point>();
-    String[] splitted = path.split("-");
-    for (int i = 0; i < splitted.length; i++) {
-      translated.add(points.get(Integer.parseInt(splitted[i])));
+  public static ArrayList<Edge> translatePathForDisplayer(ArrayList<Integer> path) {
+    ArrayList<Edge> translated = new ArrayList<Edge>();
+    for (int i = 0; i < path.size()-1; i++) {
+      translated.add(em.prepareEdge(points.get(path.get(i)), points.get(path.get(i+1))));
     }
     return translated;
   }
@@ -101,6 +123,9 @@ public class App {
     pm.displayPoints(points);
     vm.horizontalLine(horizontalLength);
 
+    if (points.size() <= 3)
+      App.exitOnPurpose("Obliczenia nie mają sensu dla 3 lub mniej punktów.");
+
     edges = em.prepareFullGraph(points);
     vm.horizontalLine(horizontalLength);
 
@@ -110,37 +135,20 @@ public class App {
 
     vm.title("PROBLEM KOMIWOJAŻERA", horizontalLength);
 
-    String path = "";
-    int[] vertices = new int[points.size()-1];
-
-    for (int i = 1; i < points.size(); i++) {
-      vertices[i - 1] = i;
-    }
-
     distanceMatrix = new double[points.size()][points.size()];
     distanceMatrix = fillDistanceMatrix(points, distanceMatrix);
 
     em.displayDistanceMatrix(distanceMatrix);
     vm.horizontalLine(horizontalLength);
 
-    algorithmTSP(0, vertices, path, 0);
+    App solver = new App(distanceMatrix);
+    optimalPath = solver.getPath();
+    optimalDistance = solver.getPathCost();
 
-    finalPath = translatePath(optimalPath);
-    vm.displayFramed("Cykl:  " + optimalPath);
+    vm.displayFramed("Cykl: " + optimalPath);
+    vm.displayFramed("Koszt: " + optimalDistance);
 
-    String[] splittedPath = optimalPath.split("-");
-
-    for (int i = 0; i < finalPath.size(); i++) {
-      System.out.println(String.format("   %5s%15s", "[" + splittedPath[i] + "]", finalPath.get(i)));
-      Edge tmpEdge = new Edge();
-      if (i < finalPath.size()-1)
-        tmpEdge = new Edge(finalPath.get(i), finalPath.get(i+1));
-      else
-        tmpEdge = new Edge(finalPath.get(i), finalPath.get(0));
-      edgesPath.add(tmpEdge);
-    }
-
-    vm.displayFramed("Koszt:  " + optimalDistance);
+    edgesPath = translatePathForDisplayer(optimalPath);
     vm.horizontalLine(horizontalLength);
 
     Window.display();
