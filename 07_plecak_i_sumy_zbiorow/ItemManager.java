@@ -10,8 +10,12 @@ public class ItemManager {
 
   public static void displayItems(ArrayList<Item> items) {
     vm.title("Liczba przedmiotów: " + items.size(), App.horizontalLength);
+    System.out.println("   ╭──────┬─────────┬─────────╮");
+    System.out.println("   │ L.P. │ Rozmiar │ Wartość │");
+    System.out.println("   ├──────┼─────────┼─────────┤");
     for (int i = 0; i < items.size(); i++) {
-      System.out.println((i+1) + ": " + items.get(i).getSize() + ", " + items.get(i).getValue());
+      System.out.println(String.format("   │ %4d │ %7.2f │ %7.2f │", (i+1), items.get(i).getSize(), items.get(i).getValue()));
     }
+    System.out.println("   ╰──────┴─────────┴─────────╯");
   }
 }
