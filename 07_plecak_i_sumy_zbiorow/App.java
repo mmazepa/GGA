@@ -35,7 +35,7 @@ public class App {
     System.out.print("  ");
     for (int i = 0; i < numbers.size(); i++)
       System.out.print(" " + numbers.get(i));
-    System.out.print("\n");
+    System.out.print(" -> " + sum(numbers) + "\n");
   }
 
   public static ArrayList<Double> removeDuplicates(ArrayList<Double> numbers) {
@@ -46,6 +46,82 @@ public class App {
     }
     if (Double.compare(numbers.get(numbers.size()-1), result.get(result.size()-1)) != 0)
       result.add(numbers.get(numbers.size()-1));
+    return result;
+  }
+
+  public static ArrayList<Double> merge(ArrayList<Double> l1, ArrayList<Double> l2) {
+    ArrayList<Double> l3 = new ArrayList<Double>();
+    int l1_Index = 0;
+    int l2_Index = 0;
+
+    while (l1_Index < l1.size() && l2_Index < l2.size()) {
+      if (l1.get(l1_Index) < l2.get(l2_Index)) {
+        l3.add(l1.get(l1_Index));
+        l1_Index++;
+      } else {
+        l3.add(l2.get(l2_Index));
+        l2_Index++;
+      }
+    }
+
+    ArrayList<Double> rest;
+    int restIndex;
+    if (l1_Index >= l1.size()) {
+      rest = l2;
+      restIndex = l2_Index;
+    } else {
+      rest = l1;
+      restIndex = l1_Index;
+    }
+
+    for (int i = restIndex; i < rest.size(); i++) {
+      l3.add(rest.get(i));
+    }
+
+    return removeDuplicates(l3);
+  }
+
+  public static ArrayList<Double> trim(ArrayList<Double> numbers, double delta) {
+    ArrayList<Double> L_out = new ArrayList<Double>();
+    L_out.add(numbers.get(0));
+    double tmp = numbers.get(0);
+
+    for (int i = 1; i < numbers.size(); i++) {
+      if (tmp < ((1-delta) * numbers.get(i))) {
+        L_out.add(numbers.get(i));
+        tmp = numbers.get(i);
+      }
+    }
+    return L_out;
+  }
+
+  public static ArrayList<Double> removeTooBigNumbers(ArrayList<Double> numbers, double number) {
+    ArrayList<Double> result = new ArrayList<Double>();
+    for (int i = 0; i < numbers.size(); i++) {
+      if (numbers.get(i) <= number)
+        result.add(numbers.get(i));
+    }
+    return result;
+  }
+
+  public static ArrayList<Double> subsetSumFPTAS(ArrayList<Double> numbers, double delta, double limit) {
+    ArrayList<ArrayList<Double>> result = new ArrayList<ArrayList<Double>>();
+    for (int i = 0; i < numbers.size(); i++) {
+      double xi = numbers.get(i);
+      numbers = merge(numbers, circledPlus(numbers, xi));
+      numbers = trim(numbers, delta);
+      numbers = removeTooBigNumbers(numbers, limit);
+      result.add(numbers);
+      displayNumbers(numbers);
+    }
+    return result.get(0);
+  }
+
+  public static double sum(ArrayList<Double> numbers) {
+    double result = 0;
+    for (int i = 0; i < numbers.size(); i++) {
+      result += numbers.get(i);
+    }
     return result;
   }
 
@@ -60,7 +136,9 @@ public class App {
     im.displayItems(items);
     vm.horizontalLine(horizontalLength);
 
-    vm.displayFramed("Ograniczenie: " + args[1]);
+    double limit = Double.parseDouble(args[1]);
+
+    vm.displayFramed("Ograniczenie: " + limit);
     vm.horizontalLine(horizontalLength);
 
     vm.title("PROBLEM PLECAKOWY", horizontalLength);
@@ -69,30 +147,21 @@ public class App {
 
     vm.title("PROBLEM SUMY ZBIORÓW", horizontalLength);
 
-    ArrayList<Double> doubled = new ArrayList<Double>();
     MergeSort ms = new MergeSort();
     for (int i = 0; i < items.size(); i++) {
       numbers.add(items.get(i).getValue());
-      doubled.add(items.get(i).getValue());
-      doubled.add(items.get(i).getSize());
     }
     numbers = ms.mergeSort(numbers);
     System.out.println("LISTA POCZĄTKOWA:");
     displayNumbers(numbers);
 
-    double xi = numbers.get(5);
-    numbers = ms.merge(numbers, circledPlus(numbers, xi), doubled);
+    System.out.println("LISTY MIĘDZYCZASOWE:");
+    double delta = 0.5;
 
-    System.out.println("PLUS W KÓŁKU (" + xi + "):");
-    displayNumbers(numbers);
+    ArrayList<Double> result = subsetSumFPTAS(numbers, delta, limit);
+    System.out.println("LISTA KOŃCOWA:");
+    displayNumbers(result);
 
-    numbers = removeDuplicates(numbers);
-
-    System.out.println("PO USUNIĘCIU DUPLIKATÓW:");
-    displayNumbers(numbers);
-
-    System.out.print("\n");
-    System.out.println("   Problem sumy zbiorów w budowie...");
     vm.horizontalLine(horizontalLength);
 
     vm.title("EKPERYMENTALNE PORÓWNANIE WYNIKÓW", horizontalLength);
