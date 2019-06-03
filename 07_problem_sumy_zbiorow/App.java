@@ -1,12 +1,11 @@
 import java.util.ArrayList;
 
 public class App {
-  public static ArrayList<Item> items = new ArrayList<Item>();
   public static ArrayList<Double> numbers = new ArrayList<Double>();
   public static String inputFileName = new String();
 
+  public static AppManager am = new AppManager();
   public static FileManager fm = new FileManager();
-  public static ItemManager im = new ItemManager();
   public static VisualManager vm = new VisualManager();
 
   public static int horizontalLength = 60;
@@ -29,13 +28,6 @@ public class App {
       result.add(list.get(i) + number);
     }
     return result;
-  }
-
-  public static void displayNumbers(ArrayList<Double> numbers) {
-    System.out.print("  ");
-    for (int i = 0; i < numbers.size(); i++)
-      System.out.print(" " + numbers.get(i));
-    System.out.print(" -> " + sum(numbers) + "\n");
   }
 
   public static ArrayList<Double> removeDuplicates(ArrayList<Double> numbers) {
@@ -112,60 +104,46 @@ public class App {
       numbers = trim(numbers, delta);
       numbers = removeTooBigNumbers(numbers, limit);
       result.add(numbers);
-      displayNumbers(numbers);
+      am.displayNumbers(numbers);
     }
     return result.get(0);
-  }
-
-  public static double sum(ArrayList<Double> numbers) {
-    double result = 0;
-    for (int i = 0; i < numbers.size(); i++) {
-      result += numbers.get(i);
-    }
-    return result;
   }
 
   public static void main(String args[]) {
     checkIfFileNameIsPassed(args);
 
-    items = fm.loadItems(inputFileName);
-    im.checkItems(items);
+    numbers = fm.loadNumbers(inputFileName);
+    am.checkNumbers(numbers);
 
     if (args.length < 2) exitOnPurpose("Nie podano ograniczenia.");
 
-    im.displayItems(items);
+
     vm.horizontalLine(horizontalLength);
 
     double limit = Double.parseDouble(args[1]);
 
-    vm.displayFramed("Ograniczenie: " + limit);
-    vm.horizontalLine(horizontalLength);
-
-    vm.title("PROBLEM PLECAKOWY", horizontalLength);
-    System.out.println("   Problem plecakowy w budowie...");
-    vm.horizontalLine(horizontalLength);
-
     vm.title("PROBLEM SUMY ZBIORÓW", horizontalLength);
+    vm.displayFramed("Ograniczenie: " + limit);
+
+    vm.title("LISTA POCZĄTKOWA", horizontalLength);
+    am.displayNumbers(numbers);
 
     MergeSort ms = new MergeSort();
-    for (int i = 0; i < items.size(); i++) {
-      numbers.add(items.get(i).getValue());
-    }
     numbers = ms.mergeSort(numbers);
-    System.out.println("LISTA POCZĄTKOWA:");
-    displayNumbers(numbers);
 
-    System.out.println("LISTY MIĘDZYCZASOWE:");
+    vm.title("LISTA POSORTOWANA", horizontalLength);
+    am.displayNumbers(numbers);
+
+    vm.title("LISTY MIĘDZYCZASOWE", horizontalLength);
+
     double delta = 0.5;
-
     ArrayList<Double> result = subsetSumFPTAS(numbers, delta, limit);
-    System.out.println("LISTA KOŃCOWA:");
-    displayNumbers(result);
 
-    vm.horizontalLine(horizontalLength);
+    vm.title("LISTA KOŃCOWA", horizontalLength);
+    am.displayNumbers(result);
 
-    vm.title("EKPERYMENTALNE PORÓWNANIE WYNIKÓW", horizontalLength);
-    System.out.println("   Eksperymentalne porównanie wyników w budowie...");
+    vm.displayFramed("Wynik końcowy: " + result.get(result.size()-1));
+
     vm.horizontalLine(horizontalLength);
   }
 }
