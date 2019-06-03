@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
 public class MergeSort {
-  public ArrayList<Double> mergeSort(ArrayList<Double> numbers) {
-    ArrayList<Double> left = new ArrayList<Double>();
-    ArrayList<Double> right = new ArrayList<Double>();
+  public ArrayList<Integer> mergeSort(ArrayList<Integer> numbers) {
+    ArrayList<Integer> left = new ArrayList<Integer>();
+    ArrayList<Integer> right = new ArrayList<Integer>();
     int center;
 
     if (numbers.size() == 1) {
@@ -22,13 +22,13 @@ public class MergeSort {
     return numbers;
   }
 
-  public boolean sortConditions(ArrayList<Double> left, ArrayList<Double> right, int leftIndex, int rightIndex) {
+  public boolean sortConditions(ArrayList<Integer> left, ArrayList<Integer> right, int leftIndex, int rightIndex) {
     double numLeft = left.get(leftIndex);
     double numRight = right.get(rightIndex);
     return (numLeft < numRight);
   }
 
-  public ArrayList<Double> merge(ArrayList<Double> left, ArrayList<Double> right, ArrayList<Double> numbers) {
+  public ArrayList<Integer> merge(ArrayList<Integer> left, ArrayList<Integer> right, ArrayList<Integer> numbers) {
     int leftIndex = 0;
     int rightIndex = 0;
     int numbersIndex = 0;
@@ -44,7 +44,7 @@ public class MergeSort {
       numbersIndex++;
     }
 
-    ArrayList<Double> rest;
+    ArrayList<Integer> rest;
     int restIndex;
     if (leftIndex >= left.size()) {
       rest = right;

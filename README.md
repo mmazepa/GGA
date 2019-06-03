@@ -48,7 +48,7 @@ w roku akademickim 2018/2019.
   </tr>
   <tr>
     <td>7</td>
-    <td>Problem sumy zbiorów</td>
+    <td>Problem sumy zbioru</td>
     <td>03.06.2019</td>
     <td>-</td>
   </tr>

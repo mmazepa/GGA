@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class App {
-  public static ArrayList<Double> numbers = new ArrayList<Double>();
+  public static ArrayList<Integer> numbers = new ArrayList<Integer>();
   public static String inputFileName = new String();
 
   public static AppManager am = new AppManager();
@@ -22,27 +22,27 @@ public class App {
     System.exit(0);
   }
 
-  public static ArrayList<Double> circledPlus(ArrayList<Double> list, Double number) {
-    ArrayList<Double> result = new ArrayList<Double>();
+  public static ArrayList<Integer> circledPlus(ArrayList<Integer> list, int number) {
+    ArrayList<Integer> result = new ArrayList<Integer>();
     for (int i = 0; i < list.size(); i++) {
       result.add(list.get(i) + number);
     }
     return result;
   }
 
-  public static ArrayList<Double> removeDuplicates(ArrayList<Double> numbers) {
-    ArrayList<Double> result = new ArrayList<Double>();
+  public static ArrayList<Integer> removeDuplicates(ArrayList<Integer> numbers) {
+    ArrayList<Integer> result = new ArrayList<Integer>();
     for (int i = 0; i < numbers.size()-1; i++) {
-      if (Double.compare(numbers.get(i), numbers.get(i+1)) != 0)
+      if (numbers.get(i) != numbers.get(i+1))
         result.add(numbers.get(i));
     }
-    if (Double.compare(numbers.get(numbers.size()-1), result.get(result.size()-1)) != 0)
+    if (numbers.get(numbers.size()-1) != result.get(result.size()-1))
       result.add(numbers.get(numbers.size()-1));
     return result;
   }
 
-  public static ArrayList<Double> merge(ArrayList<Double> l1, ArrayList<Double> l2) {
-    ArrayList<Double> l3 = new ArrayList<Double>();
+  public static ArrayList<Integer> merge(ArrayList<Integer> l1, ArrayList<Integer> l2) {
+    ArrayList<Integer> l3 = new ArrayList<Integer>();
     int l1_Index = 0;
     int l2_Index = 0;
 
@@ -56,7 +56,7 @@ public class App {
       }
     }
 
-    ArrayList<Double> rest;
+    ArrayList<Integer> rest;
     int restIndex;
     if (l1_Index >= l1.size()) {
       rest = l2;
@@ -73,10 +73,10 @@ public class App {
     return removeDuplicates(l3);
   }
 
-  public static ArrayList<Double> trim(ArrayList<Double> numbers, double delta) {
-    ArrayList<Double> L_out = new ArrayList<Double>();
+  public static ArrayList<Integer> trim(ArrayList<Integer> numbers, double delta) {
+    ArrayList<Integer> L_out = new ArrayList<Integer>();
     L_out.add(numbers.get(0));
-    double tmp = numbers.get(0);
+    int tmp = numbers.get(0);
 
     for (int i = 1; i < numbers.size(); i++) {
       if (tmp < ((1-delta) * numbers.get(i))) {
@@ -87,8 +87,8 @@ public class App {
     return L_out;
   }
 
-  public static ArrayList<Double> removeTooBigNumbers(ArrayList<Double> numbers, double number) {
-    ArrayList<Double> result = new ArrayList<Double>();
+  public static ArrayList<Integer> removeTooBigNumbers(ArrayList<Integer> numbers, int number) {
+    ArrayList<Integer> result = new ArrayList<Integer>();
     for (int i = 0; i < numbers.size(); i++) {
       if (numbers.get(i) <= number)
         result.add(numbers.get(i));
@@ -96,17 +96,29 @@ public class App {
     return result;
   }
 
-  public static ArrayList<Double> subsetSumFPTAS(ArrayList<Double> numbers, double delta, double limit) {
-    ArrayList<ArrayList<Double>> result = new ArrayList<ArrayList<Double>>();
-    for (int i = 0; i < numbers.size(); i++) {
-      double xi = numbers.get(i);
-      numbers = merge(numbers, circledPlus(numbers, xi));
+  public static int subsetSumFPTAS(ArrayList<Integer> numbers, double epsilon, int limit) {
+    double delta = epsilon/numbers.size();
+
+    vm.displayFramed("Delta: " + epsilon + "/" + numbers.size() + " = " + am.round(delta,5));
+    vm.horizontalLine(horizontalLength);
+
+    for (int i = 1; i < numbers.size(); i++) {
+      System.out.println("   [start]: " + numbers);
+
+      numbers = merge(numbers, circledPlus(numbers, numbers.get(i)));
+      System.out.println("   [merge]: " + numbers);
+
       numbers = trim(numbers, delta);
+      System.out.println("   [trim]:  " + numbers);
+
       numbers = removeTooBigNumbers(numbers, limit);
-      result.add(numbers);
-      am.displayNumbers(numbers);
+      System.out.println("   [limit]: " + numbers);
+
+      vm.horizontalLine(horizontalLength);
+      am.displayNumbers(numbers, i);
+      vm.horizontalLine(horizontalLength);
     }
-    return result.get(0);
+    return numbers.get(numbers.size()-1);
   }
 
   public static void main(String args[]) {
@@ -116,14 +128,17 @@ public class App {
     am.checkNumbers(numbers);
 
     if (args.length < 2) exitOnPurpose("Nie podano ograniczenia.");
-
+    if (args.length < 3) exitOnPurpose("Nie podano wartości epsilon.");
 
     vm.horizontalLine(horizontalLength);
 
-    double limit = Double.parseDouble(args[1]);
+    int limit = (int)Double.parseDouble(args[1]);
+    double epsilon = Double.parseDouble(args[2]);
+
+    if (limit == 0) exitOnPurpose("Limit równy 0 nie ma sensu.");
 
     vm.title("PROBLEM SUMY ZBIORÓW", horizontalLength);
-    vm.displayFramed("Ograniczenie: " + limit);
+    vm.displayFramed("Ograniczenie: " + limit + ", Epsilon: " + epsilon);
 
     vm.title("LISTA POCZĄTKOWA", horizontalLength);
     am.displayNumbers(numbers);
@@ -134,16 +149,11 @@ public class App {
     vm.title("LISTA POSORTOWANA", horizontalLength);
     am.displayNumbers(numbers);
 
-    vm.title("LISTY MIĘDZYCZASOWE", horizontalLength);
+    vm.title("ALGORYTM FPTAS", horizontalLength);
+    int result = subsetSumFPTAS(numbers, epsilon, limit);
 
-    double delta = 0.5;
-    ArrayList<Double> result = subsetSumFPTAS(numbers, delta, limit);
-
-    vm.title("LISTA KOŃCOWA", horizontalLength);
-    am.displayNumbers(result);
-
-    vm.displayFramed("Wynik końcowy: " + result.get(result.size()-1));
-
+    vm.title("KONIEC ALGORYTMU", horizontalLength);
+    vm.displayFramed("Wynik końcowy: " + result);
     vm.horizontalLine(horizontalLength);
   }
 }

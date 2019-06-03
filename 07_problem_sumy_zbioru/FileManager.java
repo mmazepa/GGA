@@ -4,12 +4,12 @@ import java.io.BufferedReader;
 import java.util.ArrayList;
 
 public class FileManager {
-  public static double stringToNumber(String stringToDouble) {
-    return Double.parseDouble(stringToDouble);
+  public static int stringToNumber(String stringToInt) {
+    return Integer.parseInt(stringToInt);
   }
 
-  public static ArrayList<Double> loadNumbers(String fileName) {
-    ArrayList<Double> numbers = new ArrayList<Double>();
+  public static ArrayList<Integer> loadNumbers(String fileName) {
+    ArrayList<Integer> numbers = new ArrayList<Integer>();
     try {
       FileInputStream fileInputStream = new FileInputStream(fileName);
       InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
