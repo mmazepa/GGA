@@ -50,18 +50,18 @@ w roku akademickim 2018/2019.
     <td>7</td>
     <td>Problem sumy zbioru</td>
     <td>03.06.2019</td>
-    <td>-</td>
+    <td>3 pkt</td>
   </tr>
   <tr align="right">
     <td colspan="3"><b>SUMA:</b></td>
-    <td>25/35 pkt</td>
+    <td>28/35 pkt</td>
   </tr>
   <tr align="right">
     <td colspan="3"><b>PROCENT:</b></td>
-    <td>71%</td>
+    <td>80%</td>
   </tr>
   <tr align="right">
     <td colspan="3"><b>OCENA:</b></td>
-    <td>4.0</td>
+    <td>4.5</td>
   </tr>
 </table>
