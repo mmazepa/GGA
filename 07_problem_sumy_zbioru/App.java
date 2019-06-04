@@ -100,25 +100,32 @@ public class App {
     double delta = epsilon/numbers.size();
 
     vm.displayFramed("Delta: " + epsilon + "/" + numbers.size() + " = " + am.round(delta,5));
+
+    ArrayList<Integer> tmp = new ArrayList<Integer>();
+    tmp.add(0);
+
+    vm.horizontalLine(horizontalLength);
+    am.displayNumbers(tmp, 0);
     vm.horizontalLine(horizontalLength);
 
-    for (int i = 1; i < numbers.size(); i++) {
-      System.out.println("   [start]: " + numbers);
+    for (int i = 0; i < numbers.size(); i++) {
+      System.out.println("   [start]: " + tmp);
+      System.out.println("   [xi]:    " + numbers.get(i));
 
-      numbers = merge(numbers, circledPlus(numbers, numbers.get(i)));
-      System.out.println("   [merge]: " + numbers);
+      tmp = merge(tmp, circledPlus(tmp, numbers.get(i)));
+      System.out.println("   [merge]: " + tmp);
 
-      numbers = trim(numbers, delta);
-      System.out.println("   [trim]:  " + numbers);
+      tmp = trim(tmp, delta);
+      System.out.println("   [trim]:  " + tmp);
 
-      numbers = removeTooBigNumbers(numbers, limit);
-      System.out.println("   [limit]: " + numbers);
+      tmp = removeTooBigNumbers(tmp, limit);
+      System.out.println("   [limit]: " + tmp);
 
       vm.horizontalLine(horizontalLength);
-      am.displayNumbers(numbers, i);
+      am.displayNumbers(tmp, (i+1));
       vm.horizontalLine(horizontalLength);
     }
-    return numbers.get(numbers.size()-1);
+    return tmp.get(tmp.size()-1);
   }
 
   public static void main(String args[]) {
